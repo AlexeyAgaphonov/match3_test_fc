@@ -2,14 +2,18 @@
 
 #include <algorithm>
 
-Core::Node::Node(const std::string& name)
+#include "Render/Render.hpp"
+
+using namespace core;
+
+Node::Node(const std::string& name)
 	:
 	_name(name)
 {
 	
 }
 
-Core::Node::Node(const std::string& name, const sf::Vector2f& pos)
+Node::Node(const std::string& name, const sf::Vector2f& pos)
 	:
 	_name(name), 
 	_position(pos)
@@ -17,46 +21,58 @@ Core::Node::Node(const std::string& name, const sf::Vector2f& pos)
 	
 }
 
-const std::string& Core::Node::GetName() const
+const std::string& Node::GetName() const
 {
 	return _name;
 }
 
-Core::Node::~Node()
+Node::~Node()
 {
 	
 }
 
-void Core::Node::PreRender()
+void Node::PreRender()
 {
-	
-}
-
-
-void Core::Node::Render()
-{
-	
-}
-
-void Core::Node::AfterRender()
-{
-
-}
-
-void Core::Node::Update(float dt)
-{
-	for (auto& childNode: _children)
+	if (IsDrawable())
 	{
-		childNode->Update(dt);
+		render::PushVector(_position);
 	}
 }
 
-void Core::Node::AddChild(Node::Ptr&& ptr)
+
+void Node::Render()
+{
+	for (const auto& childNode: _children)
+	{
+		childNode->Render();
+	}
+}
+
+void Node::AfterRender()
+{
+	if (IsDrawable())
+	{
+		render::PopVector();
+	}
+}
+
+void Node::Update(float dt)
+{
+	for (auto& childNode: _children)
+	{
+		if (childNode->IsUpdated())
+		{
+			childNode->Update(dt);
+		}
+	}
+}
+
+void Node::AddChild(Node::Ptr&& ptr)
 {
 	_children.push_back(std::move(ptr));
 }
 
-void Core::Node::RemoveChildByName(const std::string& name)
+void Node::RemoveChildByName(const std::string& name)
 {
 	auto it = std::remove_if(_children.begin(), _children.end(), [name](const Node::Ptr &node)->bool
 	{
