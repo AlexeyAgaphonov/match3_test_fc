@@ -27,9 +27,15 @@
     <ClCompile Include="Sources\Core\Application.cpp">
       <Filter>Source Files\Sources\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Core\Node.cpp">
+      <Filter>Source Files\Sources\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
+      <Filter>Source Files\Sources\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Core\Node.hpp">
       <Filter>Source Files\Sources\Core</Filter>
     </ClInclude>
   </ItemGroup>
