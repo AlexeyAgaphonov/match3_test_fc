@@ -29,6 +29,7 @@ namespace match3
 		Field();
 		void Init(int width, int height);
 
+		const ChipsField& GetChipsField() const { return _chipsField; }
 	private:
 		ChipsField _chipsField;
 	};

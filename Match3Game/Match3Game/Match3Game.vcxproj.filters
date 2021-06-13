@@ -31,6 +31,9 @@
     <Filter Include="Source Files\Sources\Match3\Logic">
       <UniqueIdentifier>{463fb110-b68c-4d15-bfa6-709e7dda71f5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sources\Match3\Visual">
+      <UniqueIdentifier>{036439e3-c40e-424b-a796-17ddd8ff7309}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -63,6 +66,9 @@
     <ClCompile Include="Sources\Match3\Logic\FieldFunctions.cpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Match3\Visual\FieldNode.cpp">
+      <Filter>Source Files\Sources\Match3\Visual</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -91,6 +97,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Match3\Logic\FieldFunctions.hpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Visual\FieldNode.hpp">
+      <Filter>Source Files\Sources\Match3\Visual</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

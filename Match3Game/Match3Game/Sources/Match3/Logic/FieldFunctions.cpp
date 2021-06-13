@@ -95,6 +95,13 @@ int match3::ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, co
 			shouldCheckBottom = false;
 		}
 	}
+	return howMuchChipsInMatch;
+}
+
+
+int match3::ToCountHorizontalMatchedLine(const ChipsField& field, const ChipPos& pos)
+{
+	return 0;
 }
 
 
