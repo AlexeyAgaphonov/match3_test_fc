@@ -22,6 +22,9 @@
     <Filter Include="Source Files\Sources\Core\Render">
       <UniqueIdentifier>{81935609-3aed-431b-baea-1b7a24a5da94}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sources\Core\Resources">
+      <UniqueIdentifier>{c21d3e32-edf8-451d-9752-329937016c82}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -36,6 +39,12 @@
     <ClCompile Include="Sources\Core\Render\Render.cpp">
       <Filter>Source Files\Sources\Core\Render</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Core\Resources\ResourceDescription.cpp">
+      <Filter>Source Files\Sources\Core\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Core\Resources\ResourceManager.cpp">
+      <Filter>Source Files\Sources\Core\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -46,6 +55,12 @@
     </ClInclude>
     <ClInclude Include="Sources\Core\Render\Render.hpp">
       <Filter>Source Files\Sources\Core\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Core\Resources\ResourceDescription.hpp">
+      <Filter>Source Files\Sources\Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Core\Resources\ResourceManager.hpp">
+      <Filter>Source Files\Sources\Core\Resources</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

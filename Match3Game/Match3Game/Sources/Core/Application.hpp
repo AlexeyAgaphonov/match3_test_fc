@@ -23,5 +23,4 @@ namespace core
 		sf::Sprite sprite;
 		std::unique_ptr<sf::RenderWindow> _window;
 	};
-	
 }
