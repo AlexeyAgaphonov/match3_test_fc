@@ -2,7 +2,7 @@
 
 int main()
 {
-	Core::Application app;
+	core::Application app;
 	app.HandleUpdate();
 	return 0;
 }

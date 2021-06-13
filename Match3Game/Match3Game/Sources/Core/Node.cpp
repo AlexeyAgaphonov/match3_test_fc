@@ -40,11 +40,27 @@ void Node::PreRender()
 }
 
 
+void Node::FullRender()
+{
+	PreRender();
+	Render();
+	AfterRender();
+}
+
+
 void Node::Render()
 {
 	for (const auto& childNode: _children)
 	{
-		childNode->Render();
+		if (!childNode->IsActive())
+		{
+			childNode->PreRender();
+			if (childNode->IsDrawable())
+			{
+				childNode->Render();
+			}
+			childNode->AfterRender();
+		}
 	}
 }
 

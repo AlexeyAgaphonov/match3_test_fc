@@ -1,14 +1,16 @@
 #include "Application.hpp"
+#include "Node.hpp"
 
 
-Core::Application::Application()
+core::Application::Application()
 {
 	_window.reset(new sf::RenderWindow(sf::VideoMode(1024, 768), "Match3 Game"));
 	texture1.loadFromFile("bg.png");
 	sprite.setTexture(texture1);
+	_rootNode.reset(new Node("Root"));
 }
 
-void Core::Application::HandleUpdate()
+void core::Application::HandleUpdate()
 {
 	sf::Event ev;
 
@@ -24,6 +26,9 @@ void Core::Application::HandleUpdate()
 			}
 		}
 
+		_rootNode->Update(deltaTime.asSeconds());
+		_rootNode->FullRender();
+		
 		_window->clear();
 		_window->draw(sprite);
 		_window->display();

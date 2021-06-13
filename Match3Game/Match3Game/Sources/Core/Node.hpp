@@ -25,6 +25,7 @@ namespace core
 		Node(const std::string &, const sf::Vector2f &);
 		virtual ~Node();
 
+		virtual void FullRender();
 		virtual void Render();
 		virtual void Update(float dt);
 
@@ -35,7 +36,7 @@ namespace core
 
 		inline bool IsUpdated() const { return _state & NodeState::Updated; }
 		inline bool IsDrawable() const { return _state & NodeState::Drawable;  }
-		inline bool IsTurnedOff() const { return _state & (NodeState::Updated | NodeState::Drawable); }
+		inline bool IsActive() const { return _state & (NodeState::Updated | NodeState::Drawable); }
 	private:
 		void PreRender();
 		void AfterRender();
