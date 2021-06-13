@@ -152,6 +152,8 @@
     <ClCompile Include="Sources\Core\Render\Render.cpp" />
     <ClCompile Include="Sources\Core\Resources\ResourceDescription.cpp" />
     <ClCompile Include="Sources\Core\Resources\ResourceManager.cpp" />
+    <ClCompile Include="Sources\Match3\Logic\Chip.cpp" />
+    <ClCompile Include="Sources\Match3\Logic\Field.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp" />
@@ -159,6 +161,8 @@
     <ClInclude Include="Sources\Core\Render\Render.hpp" />
     <ClInclude Include="Sources\Core\Resources\ResourceDescription.hpp" />
     <ClInclude Include="Sources\Core\Resources\ResourceManager.hpp" />
+    <ClInclude Include="Sources\Match3\Logic\Chip.hpp" />
+    <ClInclude Include="Sources\Match3\Logic\Field.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

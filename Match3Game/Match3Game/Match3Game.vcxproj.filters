@@ -25,6 +25,12 @@
     <Filter Include="Source Files\Sources\Core\Resources">
       <UniqueIdentifier>{c21d3e32-edf8-451d-9752-329937016c82}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Sources\Match3">
+      <UniqueIdentifier>{0728bbee-4161-499d-9681-7621d45f48d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Sources\Match3\Logic">
+      <UniqueIdentifier>{463fb110-b68c-4d15-bfa6-709e7dda71f5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Main.cpp">
@@ -45,6 +51,12 @@
     <ClCompile Include="Sources\Core\Resources\ResourceManager.cpp">
       <Filter>Source Files\Sources\Core\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Match3\Logic\Chip.cpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClCompile>
+    <ClCompile Include="Sources\Match3\Logic\Field.cpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -61,6 +73,12 @@
     </ClInclude>
     <ClInclude Include="Sources\Core\Resources\ResourceManager.hpp">
       <Filter>Source Files\Sources\Core\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Logic\Chip.hpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Logic\Field.hpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
