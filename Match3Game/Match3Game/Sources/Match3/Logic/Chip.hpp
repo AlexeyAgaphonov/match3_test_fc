@@ -4,8 +4,8 @@
 namespace match3
 {
 	using ChipProperties = uint8_t;
-	ChipProperties CF_Movable	= 0b00000001;
-	ChipProperties CF_Matchable = 0b00000010;
+	constexpr ChipProperties CF_Movable	= 0b00000001;
+	constexpr ChipProperties CF_Matchable = 0b00000010;
 	
 
 	// Color or another type
@@ -22,7 +22,7 @@ namespace match3
 	class Chip
 	{
 	public:
-		Chip() = delete;
+		Chip() {}
 		Chip(ChipType type, ChipProperties properties);
 
 		const ChipProperties& GetProperties() const { return _properties;  }

@@ -60,6 +60,9 @@
     <ClCompile Include="Sources\Match3\Logic\Balance.cpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Match3\Logic\FieldFunctions.cpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -84,6 +87,9 @@
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Match3\Logic\Balance.hpp">
+      <Filter>Source Files\Sources\Match3\Logic</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Logic\FieldFunctions.hpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClInclude>
   </ItemGroup>

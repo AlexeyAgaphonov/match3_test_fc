@@ -155,6 +155,7 @@
     <ClCompile Include="Sources\Match3\Logic\Balance.cpp" />
     <ClCompile Include="Sources\Match3\Logic\Chip.cpp" />
     <ClCompile Include="Sources\Match3\Logic\Field.cpp" />
+    <ClCompile Include="Sources\Match3\Logic\FieldFunctions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp" />
@@ -165,6 +166,7 @@
     <ClInclude Include="Sources\Match3\Logic\Balance.hpp" />
     <ClInclude Include="Sources\Match3\Logic\Chip.hpp" />
     <ClInclude Include="Sources\Match3\Logic\Field.hpp" />
+    <ClInclude Include="Sources\Match3\Logic\FieldFunctions.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

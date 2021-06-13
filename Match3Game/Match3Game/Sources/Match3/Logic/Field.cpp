@@ -2,8 +2,8 @@
 
 #include "Balance.hpp"
 
+#include <array>
 using namespace match3;
-
 
 
 
