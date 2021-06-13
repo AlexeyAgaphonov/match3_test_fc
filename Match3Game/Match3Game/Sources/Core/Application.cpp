@@ -1,5 +1,4 @@
 #include "Application.hpp"
-#include "Node.hpp"
 
 
 core::Application::Application()

@@ -3,12 +3,12 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Graphics/Image.hpp>
 
+#include "Node.hpp"
+
 namespace core
 {
-	class Node;
-	
-	const constexpr int32_t FramesPerSecond = 60;
-	const constexpr int32_t TicksDelay = 1000 / FramesPerSecond;
+	constexpr int32_t FramesPerSecond = 60;
+	constexpr int32_t TicksDelay = 1000 / FramesPerSecond;
 
 	class Application
 	{
