@@ -12,4 +12,10 @@ namespace match3
 	const std::vector<SwipeDirection>& WhatDirectionCanChipBeSwiped(const ChipsField& field, const ChipPos& pos);
 
 	bool DoesAnyMatchExist(const match3::ChipsField& field);
+
+	int ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, const ChipPos& pos);
+	
+	int ToCountHorizontalMatchedLine(const ChipsField& field, const ChipPos& pos);
+	
+	bool WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
 }
