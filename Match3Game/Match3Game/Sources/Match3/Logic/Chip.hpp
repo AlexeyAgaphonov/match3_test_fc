@@ -8,7 +8,7 @@ namespace match3
 	ChipProperties CF_Matchable = 0b00000010;
 	
 
-	// Color or enother object
+	// Color or another type
 	enum class ChipType : uint8_t
 	{
 		Red,
@@ -16,6 +16,7 @@ namespace match3
 		Green,
 		Blue,
 		Purple,
+		ColorSize
 	};
 	
 	class Chip

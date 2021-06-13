@@ -152,6 +152,7 @@
     <ClCompile Include="Sources\Core\Render\Render.cpp" />
     <ClCompile Include="Sources\Core\Resources\ResourceDescription.cpp" />
     <ClCompile Include="Sources\Core\Resources\ResourceManager.cpp" />
+    <ClCompile Include="Sources\Match3\Logic\Balance.cpp" />
     <ClCompile Include="Sources\Match3\Logic\Chip.cpp" />
     <ClCompile Include="Sources\Match3\Logic\Field.cpp" />
   </ItemGroup>
@@ -161,6 +162,7 @@
     <ClInclude Include="Sources\Core\Render\Render.hpp" />
     <ClInclude Include="Sources\Core\Resources\ResourceDescription.hpp" />
     <ClInclude Include="Sources\Core\Resources\ResourceManager.hpp" />
+    <ClInclude Include="Sources\Match3\Logic\Balance.hpp" />
     <ClInclude Include="Sources\Match3\Logic\Chip.hpp" />
     <ClInclude Include="Sources\Match3\Logic\Field.hpp" />
   </ItemGroup>
