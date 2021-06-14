@@ -17,24 +17,23 @@ void balance::InitSeed()
 }
 
 
-Chip&& balance::GenerateNewChip()
+Chip balance::GenerateNewChip()
 {
 	const auto color = static_cast<ChipType>(Random(static_cast<int>(ChipType::ColorSize)));
 	return Chip(color, CF_Matchable | CF_Movable);
 }
 
-const ChipsField& balance::GenerateNewField(int width, int height)
+void balance::GenerateNewField(int width, int height, ChipsField& field)
 {
-	ChipsField field;
+	field.clear();
 	field.reserve(width);
 	for (int i = 0; i < width; ++i)
 	{
-		field[i].emplace_back();
+		field.push_back(std::vector<Chip>());
 		field[i].reserve(height);
 		for (int j = 0; j < height; ++j)
 		{
 			field[i].emplace_back(GenerateNewChip());
 		}
 	}
-	return field;
 }

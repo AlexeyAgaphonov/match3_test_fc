@@ -1,6 +1,8 @@
 #pragma once
 
 #include <SFML/System/Vector2.hpp>
+#include <SFML/Graphics.hpp>
+
 #include <vector>
 #include <memory>
 #include <string>
@@ -13,10 +15,8 @@ namespace core
 		const static uint8_t Drawable = 0b00000010;
 	}
 	
-	class Node
+	class Node : public sf::Transformable
 	{
-		
-		
 	public:
 		
 		using Ptr = std::unique_ptr<Node>;
@@ -25,8 +25,7 @@ namespace core
 		Node(const std::string &, const sf::Vector2f &);
 		virtual ~Node();
 
-		virtual void FullRender();
-		virtual void Render();
+		virtual void Draw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform);
 		virtual void Update(float dt);
 
 		const std::string& GetName() const;
@@ -37,13 +36,11 @@ namespace core
 		inline bool IsUpdated() const { return _state & NodeState::Updated; }
 		inline bool IsDrawable() const { return _state & NodeState::Drawable;  }
 		inline bool IsActive() const { return _state & (NodeState::Updated | NodeState::Drawable); }
-	private:
-		void PreRender();
-		void AfterRender();
+	protected:
+		virtual void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) { }
 	private:
 		std::string _name;
 		std::vector<Node::Ptr> _children;
-		sf::Vector2f _position;
 
 		uint8_t _state = 0;
 	};

@@ -7,18 +7,16 @@
 using namespace core;
 
 Node::Node(const std::string& name)
-	:
-	_name(name)
+	: _name(name)
 {
-	
+	_state = NodeState::Updated | NodeState::Drawable;
 }
 
 Node::Node(const std::string& name, const sf::Vector2f& pos)
-	:
-	_name(name), 
-	_position(pos)
+	: _name(name)
 {
-	
+	_state = NodeState::Updated & NodeState::Drawable;
+	setPosition(pos.x, pos.y);
 }
 
 const std::string& Node::GetName() const
@@ -31,46 +29,19 @@ Node::~Node()
 	
 }
 
-void Node::PreRender()
+void Node::Draw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform)
 {
 	if (IsDrawable())
 	{
-		render::PushVector(_position);
-	}
-}
-
-
-void Node::FullRender()
-{
-	PreRender();
-	Render();
-	AfterRender();
-}
-
-
-void Node::Render()
-{
-	for (const auto& childNode: _children)
-	{
-		if (!childNode->IsActive())
+		const auto currTransform = parentTransform * getTransform();
+		InnerDraw(target, states, currTransform);
+		for (auto& childNode: _children)
 		{
-			childNode->PreRender();
-			if (childNode->IsDrawable())
-			{
-				childNode->Render();
-			}
-			childNode->AfterRender();
+			childNode->Draw(target, states, currTransform);
 		}
 	}
 }
 
-void Node::AfterRender()
-{
-	if (IsDrawable())
-	{
-		render::PopVector();
-	}
-}
 
 void Node::Update(float dt)
 {

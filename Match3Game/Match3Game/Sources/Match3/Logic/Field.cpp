@@ -14,7 +14,7 @@ Field::Field()
 
 void Field::Init(int width, int height)
 {
-	_chipsField = balance::GenerateNewField(width, height);
+	balance::GenerateNewField(width, height, _chipsField);
 }
 
 

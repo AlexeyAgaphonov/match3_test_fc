@@ -3,20 +3,25 @@
 #include "Core/Node.hpp"
 
 #include "Match3/Logic/Field.hpp"
-#include "Match3/Logic/Chip.hpp"
 
 namespace match3
 {
 	constexpr float ChipRadius = 32.f;
+	constexpr float ChipDistance = ChipRadius * 2.0f + ChipRadius * 0.1f;
 	
 	class FieldNode : public core::Node
 	{
 	public:
-		FieldNode(std::weak_ptr<Field>&& field);
+		FieldNode(std::shared_ptr<Field> field);
 
-		void Render() override;
+		void Update(float dt) override;
+	protected:
+		
+		void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) override;
 	private:
-		std::weak_ptr<Field> _field;
-		std::map<ChipType, sf::CircleShape> _chipDrawers;
+		sf::Font _font;
+		
+		std::shared_ptr<Field> _field;
+		std::vector<sf::CircleShape> _chipDrawers;
 	};
 }

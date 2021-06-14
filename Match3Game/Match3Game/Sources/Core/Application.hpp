@@ -4,6 +4,9 @@
 #include <SFML/Graphics/Image.hpp>
 
 #include "Node.hpp"
+#include "Match3/Logic/Field.hpp"
+
+#include <functional>
 
 namespace core
 {
@@ -17,10 +20,16 @@ namespace core
 
 		void HandleUpdate();
 
+		std::shared_ptr<match3::Field> GetFieldPtr();
+
+		core::Node* GetRootNode() { return _rootNode.get();  }
 	private:
+		sf::RenderStates _renderStates;
+		
 		std::unique_ptr<Node> _rootNode;
-		sf::Texture texture1;
-		sf::Sprite sprite;
-		std::unique_ptr<sf::RenderWindow> _window;
+
+		std::shared_ptr<match3::Field> _field;
+		
+		sf::RenderWindow _window;
 	};
 }
