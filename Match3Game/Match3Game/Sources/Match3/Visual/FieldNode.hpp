@@ -6,8 +6,8 @@
 
 namespace match3
 {
-	constexpr float ChipRadius = 32.f;
-	constexpr float ChipDistance = ChipRadius * 2.0f + ChipRadius * 0.1f;
+	constexpr float ChipRadius = 28.f;
+	constexpr float ChipDistance = 64.f;
 	
 	class FieldNode : public core::Node
 	{
@@ -17,17 +17,34 @@ namespace match3
 		void Update(float dt) override;
 	protected:
 		bool InnerMouseDown(const sf::Vector2f& pos) override;
+		void InnerMouseCancel() override;
 		
 		void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) override;
+
+		ChipPos GetSelectedChipPosByRenderPos(const sf::Vector2f& pos);
+		void StartSwiping(const ChipPos& from, SwipeDirection dir);
 	private:
+		struct SwipingAnimData
+		{
+			bool activated = false;
+			const float duration = 0.5f;
+			float timer = 0.f;
+			SwipeDirection dir = SwipeDirection::None;
+			sf::Vector2f offset;
+		} _swipingAnimData;
+		
+		bool _mouseBlocked = false;
+		bool _mousePressed = false;
 		float _width;
 		float _height;
 		
 		sf::Font _font;
 		sf::CircleShape _cursor;
-		sf::Vector2f _cursorPos;
+		ChipPos _selectedChip;
+		const ChipPos EMPTY_CHIP_POS = ChipPos(-1, 1);
 		
 		std::shared_ptr<Field> _field;
 		std::vector<sf::CircleShape> _chipDrawers;
+		std::vector<sf::CircleShape> _chipSelectedDrawers;
 	};
 }
