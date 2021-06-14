@@ -20,4 +20,6 @@ namespace match3
 	bool WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
 
 	bool DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second);
+
+	SwipeDirection CalcDirectionFromChipPoses(const ChipPos& first, const ChipPos& second);
 }

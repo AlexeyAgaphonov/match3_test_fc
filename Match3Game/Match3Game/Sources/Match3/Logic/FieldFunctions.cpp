@@ -130,3 +130,33 @@ bool match3::DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& secon
 	return ((first.x == second.x - 1 || first.x == second.x + 1) && first.y == second.y)
 		|| ((first.y == second.y - 1 || first.y == second.y + 1) && first.x == second.x);
 }
+
+SwipeDirection match3::CalcDirectionFromChipPoses(const ChipPos& first, const ChipPos& second)
+{
+	SwipeDirection dir = SwipeDirection::None;
+
+	if (first.x == second.x)
+	{
+		if (first.y == second.y - 1)
+		{
+			dir = SwipeDirection::Down;
+		}
+		else if (first.y == second.y + 1)
+		{
+			dir = SwipeDirection::Up;
+		}
+	}
+	else if (first.y == second.y)
+	{
+		if (first.x == second.x - 1)
+		{
+			dir = SwipeDirection::Right;
+		}
+		else if (first.x == second.x + 1)
+		{
+			dir = SwipeDirection::Left;
+		}
+	}
+
+	return dir;
+}
