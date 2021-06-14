@@ -124,3 +124,9 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 	}
 	return willHave;
 }
+
+bool match3::DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second)
+{
+	return ((first.x == second.x - 1 || first.x == second.x + 1) && first.y == second.y)
+		|| ((first.y == second.y - 1 || first.y == second.y + 1) && first.x == second.x);
+}

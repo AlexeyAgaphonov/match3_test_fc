@@ -18,4 +18,6 @@ namespace match3
 	int ToCountHorizontalMatchedLine(const ChipsField& field, const ChipPos& pos);
 	
 	bool WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
+
+	bool DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second);
 }
