@@ -9,7 +9,7 @@ using namespace core;
 Node::Node(const std::string& name)
 	: _name(name)
 {
-	_state = NodeState::Updated | NodeState::Drawable;
+	_state = NodeState::Updated | NodeState::Drawable | NodeState::Clickable;
 }
 
 Node::Node(const std::string& name, const sf::Vector2f& pos)
@@ -66,4 +66,88 @@ void Node::RemoveChildByName(const std::string& name)
 		return node->GetName() == name;
 	});
 	_children.erase(it, _children.end());
+}
+
+bool Node::MouseDown(const sf::Vector2f& pos)
+{
+	if (!IsActive())
+	{
+		return false;
+	}
+
+	auto newPos = TransformPoint(pos);
+	
+	InnerMouseDown(newPos);
+
+	for (auto& childNode : _children)
+	{
+		if (childNode->IsClickable())
+		{
+			childNode->MouseDown(newPos);
+		}
+	}
+}
+
+void Node::MouseMove(const sf::Vector2f& pos)
+{
+	if (!IsActive())
+	{
+		return;
+	}
+
+	auto newPos = TransformPoint(pos);
+	
+	InnerMouseMove(newPos);
+
+	for (auto& childNode : _children)
+	{
+		if (childNode->IsClickable())
+		{
+			childNode->MouseMove(newPos);
+		}
+	}
+}
+
+bool Node::MouseUp(const sf::Vector2f& pos)
+{
+	if (!IsActive())
+	{
+		return false;
+	}
+
+	auto newPos = TransformPoint(pos);
+	
+	InnerMouseUp(newPos);
+
+	for (auto& childNode : _children)
+	{
+		if (childNode->IsClickable())
+		{
+			childNode->MouseUp(newPos);
+		}
+	}
+}
+
+void Node::MouseCancel()
+{
+	if (!IsActive())
+	{
+		return;
+	}
+
+	InnerMouseCancel();
+	for (auto& childNode : _children)
+	{
+		if (childNode->IsClickable())
+		{
+			childNode->MouseCancel();
+		}
+	}
+}
+
+const sf::Vector2f& Node::TransformPoint(const sf::Vector2f& pos)
+{
+	// TODO
+	constexpr float MagicMultiplier = 2.0f;
+	return pos - getPosition() * MagicMultiplier;
 }

@@ -11,8 +11,9 @@ namespace core
 {
 	namespace NodeState
 	{
-		const static uint8_t Updated = 0b00000001;
-		const static uint8_t Drawable = 0b00000010;
+		const static uint8_t Updated =		0b00000001;
+		const static uint8_t Drawable =		0b00000010;
+		const static uint8_t Clickable =	0b00000100;
 	}
 	
 	class Node : public sf::Transformable
@@ -33,11 +34,26 @@ namespace core
 		void AddChild(Node::Ptr &&);
 		void RemoveChildByName(const std::string &);
 
+		bool MouseDown(const sf::Vector2f& pos);
+		bool MouseUp(const sf::Vector2f& pos);
+		void MouseMove(const sf::Vector2f& pos);
+		void MouseCancel();
+
 		inline bool IsUpdated() const { return _state & NodeState::Updated; }
 		inline bool IsDrawable() const { return _state & NodeState::Drawable;  }
+		inline bool IsClickable() const { return _state & NodeState::Clickable;  }
+		
 		inline bool IsActive() const { return _state & (NodeState::Updated | NodeState::Drawable); }
+		
 	protected:
+		virtual bool InnerMouseDown(const sf::Vector2f& pos) { return false; }
+		virtual bool InnerMouseUp(const sf::Vector2f& pos) { return false; }
+		virtual void InnerMouseMove(const sf::Vector2f& pos) {}
+		virtual void InnerMouseCancel() {}
+		
 		virtual void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) { }
+
+		const sf::Vector2f& TransformPoint(const sf::Vector2f& pos);
 	private:
 		std::string _name;
 		std::vector<Node::Ptr> _children;

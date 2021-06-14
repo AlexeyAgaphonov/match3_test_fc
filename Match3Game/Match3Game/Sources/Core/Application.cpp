@@ -1,5 +1,7 @@
 #include "Application.hpp"
 
+#include <iostream>
+
 
 core::Application::Application()
 	: _window(sf::VideoMode(1024, 768), "Match3 Game")
@@ -14,29 +16,44 @@ core::Application::Application()
 
 void core::Application::HandleUpdate()
 {
-	sf::Event ev;
+	sf::Event event;
 
 	sf::Clock deltaClock;
 
 	while (_window.isOpen())
 	{
 		const auto deltaTime = deltaClock.restart();
-		while (_window.pollEvent(ev))
+		while (_window.pollEvent(event))
 		{
-			if (ev.type == sf::Event::Closed)
+			if (event.type == sf::Event::Closed)
 			{
 				_window.close();
+			}
+			else if (event.type == sf::Event::MouseButtonPressed)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					_rootNode->MouseDown(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+				}
+			}
+			else if (event.type == sf::Event::MouseButtonReleased)
+			{
+				if (event.mouseButton.button == sf::Mouse::Left)
+				{
+					_rootNode->MouseUp(sf::Vector2f(event.mouseButton.x, event.mouseButton.y));
+					_rootNode->MouseCancel();
+				}
+			}
+			else if (event.type == sf::Event::MouseMoved)
+			{
+				_rootNode->MouseMove(sf::Vector2f(event.mouseMove.x, event.mouseMove.y));
 			}
 		}
 
 		_window.clear(sf::Color::Black);
 		
 		_rootNode->Update(deltaTime.asSeconds());
-
-		if (_rootNode->IsDrawable())
-		{
-			_rootNode->Draw(_window, _renderStates, sf::Transform());
-		}
+		_rootNode->Draw(_window, _renderStates, sf::Transform());
 		_window.display();
 		
 		//_window.draw(sprite);

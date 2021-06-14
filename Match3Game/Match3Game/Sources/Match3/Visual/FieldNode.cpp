@@ -4,6 +4,7 @@ using namespace match3;
 
 FieldNode::FieldNode(std::shared_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
+	, _cursor(5)
 {
 	for (uint8_t i = 0; i < static_cast<uint8_t>(ChipType::ColorSize); ++i)
 	{
@@ -18,9 +19,14 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 	_width = field->GetChipsField().size() * ChipDistance;
 	_height = field->GetChipsField()[0].size() * ChipDistance;
 
-	setPosition((1024.f - _width) / 4, -(768 - _height) / 4);
+	sf::Vector2f pos((1024.f - _width) / 4, -(768 - _height) / 4);
+	setPosition(pos);
+	auto scale = getScale();
 
 	_font.loadFromFile("Resources/MontserratAlternates-Medium.ttf");
+
+	_cursor.setFillColor(sf::Color::White);
+	_cursor.setOutlineColor(sf::Color::Black);
 }
 
 void FieldNode::Update(float dt)
@@ -49,6 +55,7 @@ void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf:
 				ChipType chipType = chip.GetType();
 				target.draw(_chipDrawers[static_cast<size_t>(chipType)], currTransform);
 
+				// Debug
 				if (true)
 				{
 					sf::Text text;
@@ -63,5 +70,19 @@ void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf:
 			++x;
 		}
 	}
+
+	target.draw(_cursor, parentTransform * getTransform());
+
+
+
 }
 
+bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
+{
+	_cursorPos = pos;
+	_cursor.setPosition(pos);
+	
+	sf::FloatRect rect(getPosition(), sf::Vector2f(_width, _height));
+
+	return rect.contains(pos);
+}

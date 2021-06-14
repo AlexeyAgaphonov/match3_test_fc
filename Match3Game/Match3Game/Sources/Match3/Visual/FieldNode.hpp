@@ -16,6 +16,7 @@ namespace match3
 
 		void Update(float dt) override;
 	protected:
+		bool InnerMouseDown(const sf::Vector2f& pos) override;
 		
 		void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) override;
 	private:
@@ -23,6 +24,8 @@ namespace match3
 		float _height;
 		
 		sf::Font _font;
+		sf::CircleShape _cursor;
+		sf::Vector2f _cursorPos;
 		
 		std::shared_ptr<Field> _field;
 		std::vector<sf::CircleShape> _chipDrawers;
