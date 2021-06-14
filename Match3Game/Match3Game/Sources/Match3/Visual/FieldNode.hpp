@@ -19,6 +19,9 @@ namespace match3
 		
 		void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) override;
 	private:
+		float _width;
+		float _height;
+		
 		sf::Font _font;
 		
 		std::shared_ptr<Field> _field;

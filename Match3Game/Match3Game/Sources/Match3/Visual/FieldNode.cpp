@@ -15,10 +15,10 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 	_chipDrawers[static_cast<size_t>(ChipType::Red)].setFillColor(sf::Color(255, 50, 50));
 	_chipDrawers[static_cast<size_t>(ChipType::Purple)].setFillColor(sf::Color(255, 50, 255));
 
-	float fieldWidth = field->GetChipsField().size() * ChipDistance;
-	float fieldHeight = field->GetChipsField()[0].size() * ChipDistance;
+	_width = field->GetChipsField().size() * ChipDistance;
+	_height = field->GetChipsField()[0].size() * ChipDistance;
 
-	setPosition((1024.f - fieldWidth) / 4, (768 - fieldHeight) / 4);
+	setPosition((1024.f - _width) / 4, -(768 - _height) / 4);
 
 	_font.loadFromFile("Resources/MontserratAlternates-Medium.ttf");
 }
@@ -42,7 +42,7 @@ void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf:
 			for (const auto& chip: horizontalLine)
 			{
 				auto currTransform = parentTransform * getTransform();
-				currTransform = currTransform.translate(sf::Vector2f(x * ChipDistance, y * ChipDistance));
+				currTransform = currTransform.translate(sf::Vector2f(x * ChipDistance, _height - y * ChipDistance + ChipDistance / 2));
 				sf::CircleShape sf(ChipRadius);
 				
 
