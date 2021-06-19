@@ -69,6 +69,9 @@
     <ClCompile Include="Sources\Match3\Visual\FieldNode.cpp">
       <Filter>Source Files\Sources\Match3\Visual</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Match3\Visual\ChipNode.cpp">
+      <Filter>Source Files\Sources\Match3\Visual</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -99,6 +102,9 @@
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Match3\Visual\FieldNode.hpp">
+      <Filter>Source Files\Sources\Match3\Visual</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Visual\ChipNode.hpp">
       <Filter>Source Files\Sources\Match3\Visual</Filter>
     </ClInclude>
   </ItemGroup>

@@ -156,6 +156,7 @@
     <ClCompile Include="Sources\Match3\Logic\Chip.cpp" />
     <ClCompile Include="Sources\Match3\Logic\Field.cpp" />
     <ClCompile Include="Sources\Match3\Logic\FieldFunctions.cpp" />
+    <ClCompile Include="Sources\Match3\Visual\ChipNode.cpp" />
     <ClCompile Include="Sources\Match3\Visual\FieldNode.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,7 @@
     <ClInclude Include="Sources\Match3\Logic\Chip.hpp" />
     <ClInclude Include="Sources\Match3\Logic\Field.hpp" />
     <ClInclude Include="Sources\Match3\Logic\FieldFunctions.hpp" />
+    <ClInclude Include="Sources\Match3\Visual\ChipNode.hpp" />
     <ClInclude Include="Sources\Match3\Visual\FieldNode.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
