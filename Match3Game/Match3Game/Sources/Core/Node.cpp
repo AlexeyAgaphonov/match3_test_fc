@@ -45,11 +45,16 @@ void Node::Draw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform
 
 void Node::Update(float dt)
 {
-	for (auto& childNode: _children)
+	if (IsUpdated())
 	{
-		if (childNode->IsUpdated())
+		InnerUpdate(dt);
+
+		for (auto& childNode : _children)
 		{
-			childNode->Update(dt);
+			if (childNode->IsUpdated())
+			{
+				childNode->Update(dt);
+			}
 		}
 	}
 }

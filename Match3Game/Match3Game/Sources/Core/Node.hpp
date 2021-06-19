@@ -26,8 +26,8 @@ namespace core
 		Node(const std::string &, const sf::Vector2f &);
 		virtual ~Node();
 
-		virtual void Draw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform);
-		virtual void Update(float dt);
+		void Draw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform);
+		void Update(float dt);
 
 		const std::string& GetName() const;
 		
@@ -52,7 +52,8 @@ namespace core
 		virtual void InnerMouseCancel() {}
 		
 		virtual void InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform) { }
-
+		virtual void InnerUpdate(float dt) {};
+		
 		const sf::Vector2f& TransformPoint(const sf::Vector2f& pos);
 	private:
 		std::string _name;
