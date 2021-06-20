@@ -22,4 +22,6 @@ namespace match3
 	bool DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second);
 
 	SwipeDirection CalcDirectionFromChipPoses(const ChipPos& first, const ChipPos& second);
+
+	SwipeDirection OppositeOfSwipeDirection(SwipeDirection dir);
 }

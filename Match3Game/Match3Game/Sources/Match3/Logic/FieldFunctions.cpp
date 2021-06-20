@@ -162,3 +162,13 @@ SwipeDirection match3::CalcDirectionFromChipPoses(const ChipPos& first, const Ch
 
 	return dir;
 }
+
+SwipeDirection match3::OppositeOfSwipeDirection(SwipeDirection dir)
+{
+	auto retDir = SwipeDirection::None;
+	if (dir == SwipeDirection::Down) { retDir = SwipeDirection::Up; }
+	else if (dir == SwipeDirection::Up) { retDir = SwipeDirection::Down; }
+	else if (dir == SwipeDirection::Left) { retDir = SwipeDirection::Right; }
+	else if (dir == SwipeDirection::Right) { retDir = SwipeDirection::Left; }
+	return retDir;
+}
