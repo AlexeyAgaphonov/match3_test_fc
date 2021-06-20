@@ -155,7 +155,7 @@ ChipPos FieldNode::GetSelectedChipPosByRenderPos(const sf::Vector2f& pos)
 {
 	auto selectedChipPos = ChipPos(-1, -1);
 	selectedChipPos.x = pos.x / ChipDistance;
-	selectedChipPos.y = (_height - pos.y + ChipDistance) / ChipDistance;
+	selectedChipPos.y = (_height - pos.y) / ChipDistance;
 	return selectedChipPos;
 }
 

@@ -153,6 +153,6 @@ void Node::MouseCancel()
 const sf::Vector2f& Node::TransformPoint(const sf::Vector2f& pos)
 {
 	// TODO
-	constexpr float MagicMultiplier = 2.0f;
+	constexpr float MagicMultiplier = 1.0f;
 	return pos - getPosition() * MagicMultiplier;
 }
