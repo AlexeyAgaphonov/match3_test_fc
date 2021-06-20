@@ -25,15 +25,6 @@ namespace match3
 		ChipPos GetSelectedChipPosByRenderPos(const sf::Vector2f& pos);
 		void StartSwiping(const ChipPos& from, SwipeDirection dir);
 	private:
-		struct SwipingAnimData
-		{
-			bool match = false;
-			bool activated = false;
-			const float duration = 0.5f;
-			float timer = 0.f;
-			SwipeDirection dir = SwipeDirection::None;
-			sf::Vector2f offset;
-		} _swipingAnimData;
 		
 		bool _mouseBlocked = false;
 		bool _mousePressed = false;
