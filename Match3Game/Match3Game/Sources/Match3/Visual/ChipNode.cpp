@@ -51,6 +51,13 @@ namespace
 	
 }
 
+std::string ChipNode::ConvertChipPosToName(const ChipPos& pos)
+{
+	return "C:" + std::to_string(pos.x) + ";" + std::to_string(pos.y);
+}
+
+
+
 ChipNode::ChipNode(ChipType type, const std::string& name)
 	: Node(name)
 	, _type(type)
