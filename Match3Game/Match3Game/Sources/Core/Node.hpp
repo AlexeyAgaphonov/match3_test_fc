@@ -44,7 +44,8 @@ namespace core
 		inline bool IsClickable() const { return _state & NodeState::Clickable;  }
 		
 		inline bool IsActive() const { return _state & (NodeState::Updated | NodeState::Drawable); }
-		
+
+		virtual void AcceptMessage(const std::string& message) {}
 	protected:
 		virtual bool InnerMouseDown(const sf::Vector2f& pos) { return false; }
 		virtual bool InnerMouseUp(const sf::Vector2f& pos) { return false; }
@@ -55,6 +56,8 @@ namespace core
 		virtual void InnerUpdate(float dt) {};
 		
 		const sf::Vector2f& TransformPoint(const sf::Vector2f& pos);
+
+		void SendMessageToChild(const std::string& childName, const std::string& msg);
 	private:
 		std::string _name;
 		std::vector<Node::Ptr> _children;

@@ -156,3 +156,14 @@ const sf::Vector2f& Node::TransformPoint(const sf::Vector2f& pos)
 	constexpr float MagicMultiplier = 1.0f;
 	return pos - getPosition() * MagicMultiplier;
 }
+
+void Node::SendMessageToChild(const std::string& childName, const std::string& msg)
+{
+	for (auto& child: _children)
+	{
+		if (child && child->GetName() == childName)
+		{
+			child->AcceptMessage(msg);
+		}
+	}
+}
