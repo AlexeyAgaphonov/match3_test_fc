@@ -86,14 +86,14 @@ void ChipNode::InnerUpdate(float dt)
 		if (_swipingAnimData.match)
 		{
 			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
-				SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
 			vec *= ChipDistance * 1.0f;
 			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI_2));
 		}
 		else
 		{
 			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
-				SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
 			vec *= ChipDistance * 0.5f;
 			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI));
 		}
