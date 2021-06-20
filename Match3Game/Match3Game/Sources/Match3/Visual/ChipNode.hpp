@@ -9,7 +9,7 @@ namespace match3
 	{
 	public:
 		ChipNode() = delete;
-		ChipNode(ChipType type);
+		ChipNode(ChipType type, const std::string& name);
 		virtual ~ChipNode();
 
 	protected:

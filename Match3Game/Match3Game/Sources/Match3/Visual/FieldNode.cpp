@@ -34,7 +34,7 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 		int y = 0;
 		for (const auto& chip : horizontalLine)
 		{
-			auto chipNode = std::make_unique<ChipNode>(chip.GetType());
+			auto chipNode = std::make_unique<ChipNode>(chip.GetType(), "C:" + std::to_string(x) + ";" + std::to_string(y) );
 			chipNode->setPosition(x * ChipDistance, y * ChipDistance);
 			AddChild(std::move(chipNode));
 			++y;

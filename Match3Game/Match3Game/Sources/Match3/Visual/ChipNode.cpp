@@ -51,8 +51,8 @@ namespace
 	
 }
 
-ChipNode::ChipNode(ChipType type)
-	: Node("ChipNode")
+ChipNode::ChipNode(ChipType type, const std::string& name)
+	: Node(name)
 	, _type(type)
 	, _selected(false)
 {
