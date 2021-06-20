@@ -20,8 +20,12 @@ namespace match3
 		Up		= 1,
 		Left	= 2,
 		Right	= 3,
-		Down	= 4
+		Down	= 4,
+		Size	= 5
 	};
+
+	std::string ConvertSwipeDirectionToStr(SwipeDirection dir);
+	SwipeDirection ConvertStrToSwipeDirection(const std::string& dirStr);
 
 	class Field
 	{
