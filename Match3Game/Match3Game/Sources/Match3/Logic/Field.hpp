@@ -34,6 +34,7 @@ namespace match3
 		void Init(int width, int height);
 
 		const ChipsField& GetChipsField() const { return _chipsField; }
+		bool TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir);
 	private:
 		ChipsField _chipsField;
 	};

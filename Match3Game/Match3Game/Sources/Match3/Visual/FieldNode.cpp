@@ -138,17 +138,17 @@ ChipPos FieldNode::GetSelectedChipPosByRenderPos(const sf::Vector2f& pos)
 
 void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 {
-	//_mouseBlocked = true;
-	if (WillChipHaveMatchAfterSwipe(_field->GetChipsField(), from, dir))
+	if (_field)
 	{
-		SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnim", ConvertSwipeDirectionToStr(dir));
-
-		const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
-		
-		SendMessageToChild(ChipNode::ConvertChipPosToName(newPos), "SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
-	}
-	else
-	{
-		SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
+		if (_field->TryToSwipeChip(_selectedChip, dir))
+		{
+			const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
+			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnim", ConvertSwipeDirectionToStr(dir));
+			SendMessageToChild(ChipNode::ConvertChipPosToName(newPos), "SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
+		}
+		else
+		{
+			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
+		}
 	}
 }
