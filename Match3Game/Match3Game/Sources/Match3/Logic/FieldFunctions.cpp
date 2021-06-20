@@ -29,7 +29,7 @@ bool match3::CanChipBeSwipedByDirection(const ChipsField& field, const ChipPos& 
 	if (DoesChipPosExistsInField(field, pos) && field[pos.x][pos.y].IsMovable())
 	{
 		auto swipedPos = pos + SwipeDirectionConvertToOffset(direction);
-		if (DoesChipPosExistsInField(field, pos) && field[swipedPos.x][swipedPos.y].IsMovable())
+		if (DoesChipPosExistsInField(field, swipedPos) && field[swipedPos.x][swipedPos.y].IsMovable())
 		{
 			canSwipeChip = true;
 		}
@@ -67,18 +67,19 @@ bool match3::DoesAnyMatchExist(const ChipsField& field)
 	return false;
 }
 
-int match3::ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, const ChipPos& pos)
+int match3::ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, const ChipPos& pos, ChipType type)
 {
 	const auto height = verticalLine.size();
-	const auto chipsType = verticalLine[pos.y].GetType();
 	auto checkRanges = [height](int pos)->bool { return pos > 0 && pos < height; };
 	bool shouldCheckUpper = true;
 	bool shouldCheckBottom = true;
-	int howMuchChipsInMatch = 0;
+	int howMuchChipsInMatch = 1;
 	
-	for (size_t i = 0; i < height / 2; ++i)
+	for (size_t i = 1; i < height / 2; ++i)
 	{
-		if (int newPosY = pos.y + i; shouldCheckUpper && checkRanges(newPosY) && verticalLine[newPosY].GetType() == chipsType)
+		if (int newPosY = pos.y + i; shouldCheckUpper 
+			&& checkRanges(newPosY) 
+			&& verticalLine[newPosY].GetType() == type)
 		{
 			++howMuchChipsInMatch;
 		}
@@ -86,7 +87,7 @@ int match3::ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, co
 		{
 			shouldCheckUpper = false;
 		}
-		if (int newPosY = pos.y - i; shouldCheckBottom && checkRanges(newPosY) && verticalLine[newPosY].GetType() == chipsType)
+		if (int newPosY = pos.y - i; shouldCheckBottom && checkRanges(newPosY) && verticalLine[newPosY].GetType() == type)
 		{
 			++howMuchChipsInMatch;
 		}
@@ -117,7 +118,8 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 	if (CanChipBeSwipedByDirection(field, pos, direction))
 	{
 		const auto checkedTpe = field[pos.x][pos.y].GetType();
-		if (ToCountVerticalMatchedLine(field[pos.x], pos) >= 3 || ToCountHorizontalMatchedLine(field, pos) >= 3)
+		if (ToCountVerticalMatchedLine(field[newPos.x], pos, field[pos.x][pos.y].GetType()) >= 3
+			|| ToCountHorizontalMatchedLine(field, pos + SwipeDirectionConvertToOffset(direction)) >= 3)
 		{
 			willHave = true;
 		}
@@ -137,22 +139,22 @@ SwipeDirection match3::CalcDirectionFromChipPoses(const ChipPos& first, const Ch
 
 	if (first.x == second.x)
 	{
-		if (first.y == second.y - 1)
-		{
-			dir = SwipeDirection::Down;
-		}
-		else if (first.y == second.y + 1)
+		if (first.y + 1 == second.y)
 		{
 			dir = SwipeDirection::Up;
+		}
+		else if (first.y - 1 == second.y)
+		{
+			dir = SwipeDirection::Down;
 		}
 	}
 	else if (first.y == second.y)
 	{
-		if (first.x == second.x - 1)
+		if (first.x + 1 == second.x)
 		{
 			dir = SwipeDirection::Right;
 		}
-		else if (first.x == second.x + 1)
+		else if (first.x - 1 == second.x)
 		{
 			dir = SwipeDirection::Left;
 		}
