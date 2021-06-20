@@ -8,51 +8,43 @@
 using namespace match3;
 
 #include "Match3/Logic/FieldFunctions.hpp"
+#include "ChipNode.hpp"
 
 FieldNode::FieldNode(std::shared_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
 	, _cursor(5)
 {
-	
-	for (uint8_t i = 0; i < static_cast<uint8_t>(ChipType::ColorSize); ++i)
-	{
-		_chipDrawers.push_back(sf::CircleShape(ChipRadius, i + 3));
-		_chipDrawers.back().setOutlineColor(sf::Color::White);
-		_chipDrawers.back().setOutlineThickness(2);
-		_chipSelectedDrawers.push_back(sf::CircleShape(ChipRadius, i + 3));
-		_chipSelectedDrawers.back().setOutlineColor(sf::Color::Magenta);
-		_chipSelectedDrawers.back().setOutlineThickness(3);
-	}
-
-	
-	_chipDrawers[static_cast<size_t>(ChipType::Blue)].setFillColor(sf::Color(50, 50, 255));
-	_chipDrawers[static_cast<size_t>(ChipType::Yellow)].setFillColor(sf::Color(255, 255, 50));
-	_chipDrawers[static_cast<size_t>(ChipType::Green)].setFillColor(sf::Color(50, 255, 50));
-	_chipDrawers[static_cast<size_t>(ChipType::Red)].setFillColor(sf::Color(255, 50, 50));
-	_chipDrawers[static_cast<size_t>(ChipType::Purple)].setFillColor(sf::Color(255, 50, 255));
-
-	_chipSelectedDrawers[static_cast<size_t>(ChipType::Blue)].setFillColor(sf::Color(50, 50, 255));
-	_chipSelectedDrawers[static_cast<size_t>(ChipType::Yellow)].setFillColor(sf::Color(255, 255, 50));
-	_chipSelectedDrawers[static_cast<size_t>(ChipType::Green)].setFillColor(sf::Color(50, 255, 50));
-	_chipSelectedDrawers[static_cast<size_t>(ChipType::Red)].setFillColor(sf::Color(255, 50, 50));
-	_chipSelectedDrawers[static_cast<size_t>(ChipType::Purple)].setFillColor(sf::Color(255, 50, 255));
 
 	_width = field->GetChipsField().size() * ChipDistance;
 	_height = field->GetChipsField()[0].size() * ChipDistance;
 
-	sf::Vector2f pos((1024.f - _width) / 4, -(768 - _height) / 4 + ChipDistance / 2);
+	sf::Vector2f pos((1024.f - _width) / 2, 768 / 2 - _height / 2);
 	setPosition(pos);
 	auto scale = getScale();
-
-	_font.loadFromFile("Resources/MontserratAlternates-Medium.ttf");
 
 	_cursor.setFillColor(sf::Color::White);
 	_cursor.setOutlineColor(sf::Color::Black);
 
 	_selectedChip = EMPTY_CHIP_POS;
+
+	auto& chipsField = _field->GetChipsField();
+	int x = 0;
+	for (const auto& horizontalLine : chipsField)
+	{
+		int y = 0;
+		for (const auto& chip : horizontalLine)
+		{
+			auto chipNode = std::make_unique<ChipNode>(chip.GetType());
+			chipNode->setPosition(x * ChipDistance, y * ChipDistance);
+			AddChild(std::move(chipNode));
+			++y;
+		}
+		++x;
+	}
+	
 }
 
-void FieldNode::Update(float dt)
+void FieldNode::InnerUpdate(float dt)
 {
 	if (_swipingAnimData.activated)
 	{
@@ -64,11 +56,23 @@ void FieldNode::Update(float dt)
 			_selectedChip = EMPTY_CHIP_POS;
 			_mouseBlocked = false;
 		}
-		auto dirVec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x, 
-			SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
-		dirVec *= ChipDistance * 0.5f;
-		dirVec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI));
-		_swipingAnimData.offset = dirVec;
+		sf::Vector2f vec;
+		if (_swipingAnimData.match)
+		{
+			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
+				SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+			vec *= ChipDistance * 1.0f;
+			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI_2));
+		}
+		else
+		{
+			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
+				SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+			vec *= ChipDistance * 0.5f;
+			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI));
+		}
+		
+		_swipingAnimData.offset = vec;
 	}
 }
 
@@ -87,23 +91,6 @@ void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf:
 			{
 				auto currTransform = parentTransform * getTransform();
 				currTransform = currTransform.translate(sf::Vector2f(x * ChipDistance, _height - y * ChipDistance));
-				sf::CircleShape sf(ChipRadius);
-				
-
-				ChipType chipType = chip.GetType();
-				if (_selectedChip.x == x && _selectedChip.y == y)
-				{
-					if (_swipingAnimData.activated)
-					{
-						currTransform = currTransform.translate(_swipingAnimData.offset);
-					}
-					target.draw(_chipSelectedDrawers[static_cast<size_t>(chipType)], currTransform);
-				}
-				else
-				{
-					target.draw(_chipDrawers[static_cast<size_t>(chipType)], currTransform);
-				}
-				
 #if _DEBUG 
 				{
 					sf::Text text;
@@ -121,8 +108,6 @@ void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf:
 	}
 
 	target.draw(_cursor, parentTransform * getTransform());
-
-
 
 }
 
@@ -179,4 +164,5 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 	_mouseBlocked = true;
 	_swipingAnimData.activated = true;
 	_swipingAnimData.dir = dir;
+	_swipingAnimData.match = WillChipHaveMatchAfterSwipe(_field->GetChipsField(), from, dir);
 }

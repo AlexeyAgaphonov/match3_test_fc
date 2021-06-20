@@ -14,8 +14,9 @@ namespace match3
 	public:
 		FieldNode(std::shared_ptr<Field> field);
 
-		void Update(float dt) override;
 	protected:
+		void InnerUpdate(float dt) override;
+		
 		bool InnerMouseDown(const sf::Vector2f& pos) override;
 		void InnerMouseCancel() override;
 		
@@ -26,6 +27,7 @@ namespace match3
 	private:
 		struct SwipingAnimData
 		{
+			bool match = false;
 			bool activated = false;
 			const float duration = 0.5f;
 			float timer = 0.f;
@@ -44,7 +46,5 @@ namespace match3
 		const ChipPos EMPTY_CHIP_POS = ChipPos(-1, 1);
 		
 		std::shared_ptr<Field> _field;
-		std::vector<sf::CircleShape> _chipDrawers;
-		std::vector<sf::CircleShape> _chipSelectedDrawers;
 	};
 }
