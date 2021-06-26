@@ -28,6 +28,8 @@ namespace match3
 		bool IsBlocked() const { return _blockerTimer > 0.f;  }
 
 		sf::Vector2f ConvertChipPosToPosition(const ChipPos& chipPos);
+
+		void RemoveChipsFromField(const std::vector<ChipPos>& chipPoses);
 	private:
 		float _blockerTimer = 0.f;
 		
@@ -48,5 +50,7 @@ namespace match3
 			float timer = 0.f;
 			float duration = 0.f;
 		} _checkerMatchField;
+
+		std::vector<std::vector<core::Node::Ptr>> _chipNodes;
 	};
 }

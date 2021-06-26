@@ -32,12 +32,13 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 	int x = 0;
 	for (const auto& horizontalLine : chipsField)
 	{
+		_chipNodes.push_back({});
 		int y = 0;
 		for (const auto& chip : horizontalLine)
 		{
-
 			Node::Ptr chipNode = new ChipNode(chip.GetType(), ChipNode::ConvertChipPosToName(ChipPos(x, y)));
 			chipNode->setPosition(ConvertChipPosToPosition({x, y}));
+			_chipNodes.back().push_back(chipNode);
 			AddChild(std::move(chipNode));
 			++y;
 		}
@@ -71,20 +72,7 @@ void FieldNode::InnerUpdate(float dt)
 				std::vector<std::pair<ChipPos, Chip>> newChips;
 				_field->MatchChips();
 				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
-				for (auto& chipPos: wereDestroyed)
-				{
-					RemoveChildByName(ChipNode::ConvertChipPosToName(chipPos));
-				}
-
-				
-
-				/*for (auto& newChipPair: newChips)
-				{
-					auto chipNode = std::make_unique<ChipNode>(newChipPair.second.GetType(), ChipNode::ConvertChipPosToName(newChipPair.first));
-					chipNode->setPosition(ConvertChipPosToPosition(newChipPair.first));
-					AddChild(std::move(chipNode));
-				}*/
-				
+				RemoveChipsFromField(wereDestroyed);
 			}
 		}
 	}
@@ -182,4 +170,25 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 sf::Vector2f FieldNode::ConvertChipPosToPosition(const ChipPos& chipPos)
 {
 	return { chipPos.x * ChipDistance, _height - chipPos.y * ChipDistance };
+}
+
+void FieldNode::RemoveChipsFromField(const std::vector<ChipPos>& chipPoses)
+{
+	for (auto& chipPos : chipPoses)
+	{
+		RemoveChildByName(ChipNode::ConvertChipPosToName(chipPos));
+	}
+	int x = 0;
+	for (auto& column : _chipNodes)
+	{
+		int y = 0;
+		auto it = std::remove_if(column.begin(), column.end(), [&chipPoses, &y, x](auto& chipNode) -> bool
+			{
+				bool result = std::find(chipPoses.begin(), chipPoses.end(), ChipPos(x, y)) != chipPoses.end();
+				++y;
+				return result;
+			});
+		column.erase(it, column.end());
+		++x;
+	}
 }
