@@ -167,3 +167,12 @@ void Node::SendMessageToChild(const std::string& childName, const std::string& m
 		}
 	}
 }
+
+void Node::AcceptMessage(const std::string& message, const std::string& data)
+{
+	if (message == "ChangeName")
+	{
+		_name = data;
+	}
+}
+
