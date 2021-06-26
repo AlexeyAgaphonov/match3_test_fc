@@ -67,7 +67,7 @@ ChipNode::ChipNode(ChipType type, const std::string& name)
 	, _type(type)
 	, _selected(false)
 {
-	
+	ChangeState(core::NodeState::Updated | core::NodeState::Drawable);
 }
 
 ChipNode::~ChipNode() { }
