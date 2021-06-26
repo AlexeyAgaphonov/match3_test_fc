@@ -6,6 +6,9 @@
 
 namespace match3
 {
+	constexpr float ChipSwipeTime = 0.5f;
+	constexpr float ChipFadeInTime = 0.5f;
+	
 	class ChipNode : public core::Node
 	{
 	public:
@@ -26,10 +29,16 @@ namespace match3
 		{
 			bool match = false;
 			bool activated = false;
-			const float duration = 0.5f;
+			const float duration = ChipSwipeTime;
 			float timer = 0.f;
 			SwipeDirection dir = SwipeDirection::None;
 			sf::Vector2f offset;
 		} _swipingAnimData;
+
+		struct FadeInData
+		{
+			bool activated = false;
+			float timer = 0.f;
+		} _fadeInData;
 	};
 }

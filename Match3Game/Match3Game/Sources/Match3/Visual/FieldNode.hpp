@@ -24,9 +24,11 @@ namespace match3
 
 		ChipPos GetSelectedChipPosByRenderPos(const sf::Vector2f& pos);
 		void StartSwiping(const ChipPos& from, SwipeDirection dir);
+
+		bool IsBlocked() const { return _blockerTimer > 0.f;  }
 	private:
+		float _blockerTimer = 0.f;
 		
-		bool _mouseBlocked = false;
 		bool _mousePressed = false;
 		float _width;
 		float _height;
@@ -37,5 +39,12 @@ namespace match3
 		const ChipPos EMPTY_CHIP_POS = ChipPos(-1, 1);
 		
 		std::shared_ptr<Field> _field;
+
+		struct
+		{
+			bool activated = false;
+			float timer = 0.f;
+			float duration = 0.f;
+		} _checkerMatchField;
 	};
 }

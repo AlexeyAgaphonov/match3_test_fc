@@ -46,47 +46,49 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 
 void FieldNode::InnerUpdate(float dt)
 {
+	if (_blockerTimer > 0.f)
+	{
+		_blockerTimer -= dt;
+		if (_blockerTimer < 0.f)
+		{
+			_blockerTimer = 0.f;
+		}
+	}
 
+	if (_checkerMatchField.activated)
+	{
+		_checkerMatchField.timer += dt;
+		if (_checkerMatchField.timer > _checkerMatchField.duration)
+		{
+			_checkerMatchField.timer = _checkerMatchField.duration;
+			_checkerMatchField.activated = false;
+
+			if (_field)
+			{
+				std::vector<ChipPos> wereDestroyed;
+				std::vector<std::pair<ChipPos, Chip>> newChips;
+				_field->MatchChips();
+				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
+				for (auto& chipPos: wereDestroyed)
+				{
+					RemoveChildByName(ChipNode::ConvertChipPosToName(chipPos));
+				}
+				//_children.erase()
+			}
+		}
+	}
 }
 
 
 
 void FieldNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform)
 {
-	if (_field) 
-	{
-		auto& chipsField = _field->GetChipsField();
-		int x = 0;
-		for (const auto& horizontalLine: chipsField)
-		{
-			int y = 0;
-			for (const auto& chip: horizontalLine)
-			{
-				auto currTransform = parentTransform * getTransform();
-				currTransform = currTransform.translate(sf::Vector2f(x * ChipDistance, _height - y * ChipDistance));
-#if _DEBUG 
-				{
-					sf::Text text;
-					text.setCharacterSize(10);
-					text.setFont(_font);
-					text.setString(std::to_string(x) + "-" + std::to_string(y));
-					text.setFillColor(sf::Color::White);
-					target.draw(text, currTransform);
-				}
-#endif
-				++y;
-			}
-			++x;
-		}
-	}
-
-	target.draw(_cursor, parentTransform * getTransform());
 
 }
 
 bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
 {
-	if (_mouseBlocked)
+	if (IsBlocked())
 	{
 		return false;
 	}
@@ -140,11 +142,23 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 {
 	if (_field)
 	{
+		_blockerTimer += ChipSwipeTime;
 		if (_field->TryToSwipeChip(_selectedChip, dir))
 		{
 			const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
-			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnim", ConvertSwipeDirectionToStr(dir));
-			SendMessageToChild(ChipNode::ConvertChipPosToName(newPos), "SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
+			const auto selectedPosName = ChipNode::ConvertChipPosToName(_selectedChip);
+			const auto newPosName = ChipNode::ConvertChipPosToName(newPos);
+			
+			SendMessageToChild(selectedPosName, "SwipeAnim", ConvertSwipeDirectionToStr(dir));
+			SendMessageToChild(newPosName, "SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
+
+			SendMessageToChild(selectedPosName, "ChangeName", "tempName");
+			SendMessageToChild(newPosName, "ChangeName", selectedPosName);
+			SendMessageToChild("tempName", "ChangeName", newPosName);
+			
+			
+			_checkerMatchField.activated = true;
+			_checkerMatchField.duration = ChipSwipeTime;
 		}
 		else
 		{

@@ -100,6 +100,15 @@ void ChipNode::InnerUpdate(float dt)
 
 		_swipingAnimData.offset = vec;
 	}
+	else if (_fadeInData.activated)
+	{
+		_fadeInData.timer += dt;
+		if (_fadeInData.timer > ChipFadeInTime)
+		{
+			_fadeInData.timer = ChipFadeInTime;
+			_fadeInData.activated = false;
+		}
+	}
 }
 
 void ChipNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform)
@@ -107,14 +116,15 @@ void ChipNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::
 	auto currTransform = parentTransform;
 	currTransform = currTransform.translate(_swipingAnimData.offset);
 	currTransform = currTransform.translate(0.f, -ChipDistance);
-	if (_selected)
-	{
-		target.draw(GetSelectedChipDrawer(_type), currTransform);
-	}
-	else
-	{
-		target.draw(GetChipDrawer(_type), currTransform);
-	}
+	auto figure = _selected ? GetSelectedChipDrawer(_type) : GetChipDrawer(_type);
+	//if (_fadeInData.timer > 0.f)
+	//{
+	//	auto color = figure.getFillColor();
+	//	color.a *= _fadeInData.timer / ChipFadeInTime;
+	//	figure.setFillColor(color);
+	//}
+	target.draw(figure, currTransform);
+
 }
 
 void ChipNode::AcceptMessage(const std::string& message, const std::string& data)
@@ -138,5 +148,9 @@ void ChipNode::AcceptMessage(const std::string& message, const std::string& data
 	else if (message == "Unselect")
 	{
 		_selected = false;
+	}
+	else
+	{
+		Node::AcceptMessage(message, data);
 	}
 }
