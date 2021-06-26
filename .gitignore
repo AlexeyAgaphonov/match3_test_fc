@@ -1,6 +1,8 @@
 *.vs
 enc_temp_folder
 
+Match3Game/packages/boost*
+
 *Debug
 SFML-2.5.1
 
