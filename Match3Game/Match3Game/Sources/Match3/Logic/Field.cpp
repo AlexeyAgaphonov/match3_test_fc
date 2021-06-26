@@ -57,5 +57,72 @@ bool Field::TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir)
 	return successfulSwipe;
 }
 
+void Field::MatchChips()
+{
+	for (auto& column: _chipsField)
+	{
+		ChipType prevChipType = ChipType::ColorSize;
+		int chipAmount = 1;
+		int posY = 0;
+		for (auto& chip: column)
+		{
+			if (chip.GetType() != prevChipType)
+			{
+				if (chipAmount >= balance::AmountForMatch)
+				{
+					for (int i = 0; i < chipAmount; ++i)
+					{
+						column[i + posY - chipAmount].Destroy();
+					}
+				}
+				prevChipType = chip.GetType();
+				chipAmount = 1;
+			}
+			else
+			{
+				++chipAmount;
+			}
+			++posY;
+		}
+	}
+}
+
+void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips)
+{
+	wereDestroyed.clear();
+	newChips.clear();
+	
+	int x = 0;
+	for (auto& column : _chipsField)
+	{
+		int y = 0;
+		const int columnSize = column.size();
+
+		auto it_erase = std::remove_if(column.begin(), column.end(), [&wereDestroyed, &y, x](auto& chip)->bool {
+				bool ret = false;
+				if (chip.IsDestroyed())
+				{
+					wereDestroyed.push_back(ChipPos(x, y));
+					ret = true;
+				}
+				++y;
+				return ret;
+			});
+		++x;
+
+		column.erase(it_erase, column.end());
+
+		while (column.size() < columnSize)
+		{
+			int curY = column.size();
+			auto newChip = balance::GenerateNewChip();
+			newChips.push_back({ChipPos(x, curY), newChip });
+			column.push_back(std::move(newChip));
+		}
+	}
+}
+
+
+
 
 

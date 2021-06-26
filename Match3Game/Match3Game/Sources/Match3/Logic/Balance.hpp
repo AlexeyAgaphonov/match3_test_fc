@@ -5,6 +5,8 @@
 
 namespace match3::balance
 {
+	constexpr int AmountForMatch = 3;
+	
 	void InitSeed();
 	int Random(int to);
 	Chip GenerateNewChip();
