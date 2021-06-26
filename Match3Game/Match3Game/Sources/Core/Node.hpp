@@ -46,6 +46,8 @@ namespace core
 		inline bool IsActive() const { return _state & (NodeState::Updated | NodeState::Drawable); }
 
 		virtual void AcceptMessage(const std::string& message, const std::string& data);
+
+		void ChangeState(uint8_t state) { _state = state; }
 	protected:
 		virtual bool InnerMouseDown(const sf::Vector2f& pos) { return false; }
 		virtual bool InnerMouseUp(const sf::Vector2f& pos) { return false; }

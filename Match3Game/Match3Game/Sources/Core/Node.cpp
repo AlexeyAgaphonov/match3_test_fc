@@ -15,7 +15,7 @@ Node::Node(const std::string& name)
 Node::Node(const std::string& name, const sf::Vector2f& pos)
 	: _name(name)
 {
-	_state = NodeState::Updated & NodeState::Drawable;
+	_state = NodeState::Updated | NodeState::Drawable | NodeState::Clickable;
 	setPosition(pos.x, pos.y);
 }
 
