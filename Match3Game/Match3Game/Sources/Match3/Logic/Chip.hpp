@@ -4,8 +4,8 @@
 namespace match3
 {
 	using ChipProperties = uint8_t;
-	constexpr ChipProperties CF_Movable	= 0b00000001;
-	constexpr ChipProperties CF_Matchable = 0b00000010;
+	constexpr ChipProperties CF_Movable		= 0b00000001;
+	constexpr ChipProperties CF_Matchable	= 0b00000010;
 	
 
 	// Color or another type
@@ -29,8 +29,10 @@ namespace match3
 		const ChipType& GetType() const { return _type; }
 		bool IsMovable() const { return _properties & CF_Movable; }
 		bool IsMatchable() const { return _properties & CF_Movable; }
-
+		bool IsDestroyed() const { return _isDestroyed; }
+		void Destroy() { _isDestroyed = true; }
 	private:
+		bool _isDestroyed = false;
 		ChipType _type;
 		ChipProperties _properties;
 	};
