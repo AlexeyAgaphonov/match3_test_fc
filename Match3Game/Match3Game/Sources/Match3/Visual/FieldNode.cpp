@@ -74,7 +74,6 @@ void FieldNode::InnerUpdate(float dt)
 				{
 					RemoveChildByName(ChipNode::ConvertChipPosToName(chipPos));
 				}
-				//_children.erase()
 			}
 		}
 	}
