@@ -72,6 +72,9 @@
     <ClCompile Include="Sources\Match3\Visual\ChipNode.cpp">
       <Filter>Source Files\Sources\Match3\Visual</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Core\RefCounter.cpp">
+      <Filter>Source Files\Sources\Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -107,5 +110,11 @@
     <ClInclude Include="Sources\Match3\Visual\ChipNode.hpp">
       <Filter>Source Files\Sources\Match3\Visual</Filter>
     </ClInclude>
+    <ClInclude Include="Sources\Core\RefCounter.hpp">
+      <Filter>Source Files\Sources\Core</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
 </Project>

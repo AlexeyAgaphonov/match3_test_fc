@@ -6,6 +6,7 @@
 
 using namespace core;
 
+
 Node::Node(const std::string& name)
 	: _name(name)
 {

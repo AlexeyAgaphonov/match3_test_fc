@@ -35,7 +35,8 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 		int y = 0;
 		for (const auto& chip : horizontalLine)
 		{
-			auto chipNode = std::make_unique<ChipNode>(chip.GetType(), ChipNode::ConvertChipPosToName(ChipPos(x, y)));
+
+			Node::Ptr chipNode = new ChipNode(chip.GetType(), ChipNode::ConvertChipPosToName(ChipPos(x, y)));
 			chipNode->setPosition(ConvertChipPosToPosition({x, y}));
 			AddChild(std::move(chipNode));
 			++y;
@@ -74,6 +75,16 @@ void FieldNode::InnerUpdate(float dt)
 				{
 					RemoveChildByName(ChipNode::ConvertChipPosToName(chipPos));
 				}
+
+				
+
+				/*for (auto& newChipPair: newChips)
+				{
+					auto chipNode = std::make_unique<ChipNode>(newChipPair.second.GetType(), ChipNode::ConvertChipPosToName(newChipPair.first));
+					chipNode->setPosition(ConvertChipPosToPosition(newChipPair.first));
+					AddChild(std::move(chipNode));
+				}*/
+				
 			}
 		}
 	}

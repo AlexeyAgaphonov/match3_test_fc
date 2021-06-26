@@ -6,6 +6,12 @@
 #include <vector>
 #include <memory>
 #include <string>
+#include <iostream>
+#include "RefCounter.hpp"
+#include <boost/intrusive_ptr.hpp>
+
+
+
 
 namespace core
 {
@@ -15,12 +21,12 @@ namespace core
 		const static uint8_t Drawable =		0b00000010;
 		const static uint8_t Clickable =	0b00000100;
 	}
-	
-	class Node : public sf::Transformable
+
+	class Node : public RefCounter, public sf::Transformable
 	{
 	public:
 		
-		using Ptr = std::unique_ptr<Node>;
+		using Ptr = boost::intrusive_ptr<Node>;
 		
 		Node(const std::string &);
 		Node(const std::string &, const sf::Vector2f &);
