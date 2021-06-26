@@ -10,6 +10,7 @@ using namespace match3;
 #include "Match3/Logic/FieldFunctions.hpp"
 #include "ChipNode.hpp"
 
+
 FieldNode::FieldNode(std::shared_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
 	, _cursor(5)
@@ -35,7 +36,7 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 		for (const auto& chip : horizontalLine)
 		{
 			auto chipNode = std::make_unique<ChipNode>(chip.GetType(), ChipNode::ConvertChipPosToName(ChipPos(x, y)));
-			chipNode->setPosition(x * ChipDistance, _height - y * ChipDistance);
+			chipNode->setPosition(ConvertChipPosToPosition({x, y}));
 			AddChild(std::move(chipNode));
 			++y;
 		}
@@ -165,4 +166,10 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
 		}
 	}
+}
+
+
+sf::Vector2f FieldNode::ConvertChipPosToPosition(const ChipPos& chipPos)
+{
+	return { chipPos.x * ChipDistance, _height - chipPos.y * ChipDistance };
 }

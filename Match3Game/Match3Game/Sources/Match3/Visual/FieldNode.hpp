@@ -26,6 +26,8 @@ namespace match3
 		void StartSwiping(const ChipPos& from, SwipeDirection dir);
 
 		bool IsBlocked() const { return _blockerTimer > 0.f;  }
+
+		sf::Vector2f ConvertChipPosToPosition(const ChipPos& chipPos);
 	private:
 		float _blockerTimer = 0.f;
 		
