@@ -48,12 +48,6 @@
     <ClCompile Include="Sources\Core\Render\Render.cpp">
       <Filter>Source Files\Sources\Core\Render</Filter>
     </ClCompile>
-    <ClCompile Include="Sources\Core\Resources\ResourceDescription.cpp">
-      <Filter>Source Files\Sources\Core\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Sources\Core\Resources\ResourceManager.cpp">
-      <Filter>Source Files\Sources\Core\Resources</Filter>
-    </ClCompile>
     <ClCompile Include="Sources\Match3\Logic\Chip.cpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
     </ClCompile>
@@ -85,12 +79,6 @@
     </ClInclude>
     <ClInclude Include="Sources\Core\Render\Render.hpp">
       <Filter>Source Files\Sources\Core\Render</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Core\Resources\ResourceDescription.hpp">
-      <Filter>Source Files\Sources\Core\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Sources\Core\Resources\ResourceManager.hpp">
-      <Filter>Source Files\Sources\Core\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Sources\Match3\Logic\Chip.hpp">
       <Filter>Source Files\Sources\Match3\Logic</Filter>
