@@ -31,9 +31,7 @@ void core::Application::EventFromField(match3::FieldEvent event)
 {
 	if (event == match3::FieldEvent::DoNotHaveSwipes)
 	{
-		_rootNode->RemoveChildByName("FieldNode");
-		_lastFieldSize += 2;
-		NewField();
+		_recreateField = true;
 	}
 }
 
@@ -79,6 +77,14 @@ void core::Application::HandleUpdate()
 		_rootNode->Update(deltaTime.asSeconds());
 		_rootNode->Draw(_window, _renderStates, sf::Transform());
 		_window.display();
+
+		if (_recreateField)
+		{
+			_recreateField = false;
+			_rootNode->RemoveChildByName("FieldNode");
+			_lastFieldSize += 2;
+			NewField();
+		}
 		
 		//_window.draw(sprite);
 		

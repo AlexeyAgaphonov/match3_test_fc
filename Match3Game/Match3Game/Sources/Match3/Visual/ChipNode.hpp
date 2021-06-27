@@ -29,8 +29,7 @@ namespace match3
 		enum class AnimDataType
 		{
 			BadSwipe,
-			SuccessfullSwipe,
-			Shake,
+			SuccessfulSwipe,
 			None
 		};
 		struct
@@ -43,10 +42,5 @@ namespace match3
 			sf::Vector2f offset;
 		} _animData;
 
-		struct FadeInData
-		{
-			bool activated = false;
-			float timer = 0.f;
-		} _fadeInData;
 	};
 }

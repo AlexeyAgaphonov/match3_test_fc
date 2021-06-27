@@ -74,55 +74,42 @@ ChipNode::~ChipNode() { }
 
 void ChipNode::InnerUpdate(float dt)
 {
-	if (_swipingAnimData.activated)
+	if (_animData.activated)
 	{
-		_swipingAnimData.timer += dt;
-		if (_swipingAnimData.timer > _swipingAnimData.duration)
+		_animData.timer += dt;
+		if (_animData.timer > _animData.duration)
 		{
-			_swipingAnimData.timer = 0.f;
-			_swipingAnimData.activated = false;
-			if (_swipingAnimData.type == AnimDataType::SuccessfullSwipe)
+			_animData.timer = 0.f;
+			_animData.activated = false;
+			if (_animData.type == AnimDataType::SuccessfulSwipe)
 			{
-				setPosition(getPosition() + _swipingAnimData.offset);
+				setPosition(getPosition() + _animData.offset);
 			}
 		}
 		sf::Vector2f vec;
-		if (_swipingAnimData.type == AnimDataType::SuccessfullSwipe)
+		if (_animData.type == AnimDataType::SuccessfulSwipe)
 		{
-			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
-				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_animData.dir).x,
+				-SwipeDirectionConvertToOffset(_animData.dir).y);
 			vec *= ChipDistance * 1.0f;
-			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI_2));
+			vec *= static_cast<float>(sin((_animData.timer / _animData.duration) * M_PI_2));
 		}
-		else if (_swipingAnimData.type == AnimDataType::BadSwipe)
+		else if (_animData.type == AnimDataType::BadSwipe)
 		{
-			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
-				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
+			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_animData.dir).x,
+				-SwipeDirectionConvertToOffset(_animData.dir).y);
 			vec *= ChipDistance * 0.5f;
-			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI));
-		}
-		else if (_swipingAnimData.type == AnimDataType::Shake)
-		{
-			
+			vec *= static_cast<float>(sin((_animData.timer / _animData.duration) * M_PI));
 		}
 
-		_swipingAnimData.offset = vec;
-	}
-	else if (_fadeInData.activated)
-	{
-		_fadeInData.timer += dt;
-		if (_fadeInData.timer > ChipFadeInTime)
-		{
-			_fadeInData.timer = ChipFadeInTime;
-			_fadeInData.activated = false;
-		}
+		_animData.offset = vec;
 	}
 }
 
 void ChipNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::Transform parentTransform)
 {
 	auto currTransform = parentTransform;
-	currTransform = currTransform.translate(_swipingAnimData.offset);
+	currTransform = currTransform.translate(_animData.offset);
 	currTransform = currTransform.translate(0.f, -ChipDistance);
 	auto figure = _selected ? GetSelectedChipDrawer(_type) : GetChipDrawer(_type);
 	target.draw(figure, currTransform);
@@ -133,15 +120,15 @@ void ChipNode::AcceptMessage(const std::string& message, const std::string& data
 {
 	if (message == "SwipeAnimBadly")
 	{
-		_swipingAnimData.activated = true;
-		_swipingAnimData.dir = ConvertStrToSwipeDirection(data);
-		_swipingAnimData.match = false;
+		_animData.activated = true;
+		_animData.dir = ConvertStrToSwipeDirection(data);
+		_animData.type = AnimDataType::BadSwipe;
 	}
 	else if (message == "SwipeAnim")
 	{
-		_swipingAnimData.activated = true;
-		_swipingAnimData.dir = ConvertStrToSwipeDirection(data);
-		_swipingAnimData.match = true;
+		_animData.activated = true;
+		_animData.dir = ConvertStrToSwipeDirection(data);
+		_animData.type = AnimDataType::SuccessfulSwipe;
 	}
 	else if (message == "Select")
 	{

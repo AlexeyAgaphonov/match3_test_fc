@@ -27,6 +27,7 @@ namespace core
 		void NewField();
 		void EventFromField(match3::FieldEvent event);
 	private:
+		bool _recreateField = false;
 		int _lastFieldSize = 4;
 		sf::RenderStates _renderStates;
 		
