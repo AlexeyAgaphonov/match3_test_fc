@@ -3,16 +3,40 @@
 #include <iostream>
 
 
+
 core::Application::Application()
 	: _window(sf::VideoMode(1024, 768), "Match3 Game")
 {
 	//texture1.loadFromFile("bg.png");
 	//sprite.setTexture(texture1);
 	_rootNode.reset(new Node("Root"));
-
-	_field = std::make_shared<match3::Field>();
-	_field->Init(10, 10);
+	
+	NewField();
 }
+
+void core::Application::NewField()
+{
+	_field = std::make_shared<match3::Field>();
+	_field->Init(_lastFieldSize, _lastFieldSize);
+	auto fieldNode = new match3::FieldNode(_field);
+	fieldNode->SubscribeOnEvents([this](match3::FieldEvent event)
+		{
+			this->EventFromField(event);
+		});
+	_rootNode->AddChild(core::Node::Ptr(fieldNode));
+}
+
+
+void core::Application::EventFromField(match3::FieldEvent event)
+{
+	if (event == match3::FieldEvent::DoNotHaveSwipes)
+	{
+		_rootNode->RemoveChildByName("FieldNode");
+		_lastFieldSize += 2;
+		NewField();
+	}
+}
+
 
 void core::Application::HandleUpdate()
 {

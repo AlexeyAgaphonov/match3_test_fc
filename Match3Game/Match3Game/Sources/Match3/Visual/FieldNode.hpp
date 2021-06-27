@@ -8,12 +8,22 @@ namespace match3
 {
 	constexpr float ChipRadius = 28.f;
 	constexpr float ChipDistance = 64.f;
+
+	enum class FieldEvent
+	{
+		DoNotHaveSwipes,
+	};
+	using FieldEventCallback = std::function<void(FieldEvent)>;
 	
 	class FieldNode : public core::Node
 	{
 	public:
+		static sf::Vector2f CalcPositionBySize(int width, int height);
+		static sf::Vector2f CalcPositionByField(std::shared_ptr<Field> field);
+		
 		FieldNode(std::shared_ptr<Field> field);
 
+		void SubscribeOnEvents(FieldEventCallback cb);
 	protected:
 		void InnerUpdate(float dt) override;
 		
@@ -40,6 +50,8 @@ namespace match3
 		void StartFallingChips();
 
 		bool TryToSwipe(const ChipPos &chipPos, SwipeDirection dir);
+
+		void EmitEvent(FieldEvent event);
 	private:
 		bool _chipsAreFalling = false;
 		float _blockerTimer = 0.f;
@@ -63,5 +75,6 @@ namespace match3
 		} _checkerMatchField;
 
 		std::vector<std::vector<core::Node::Ptr>> _chipNodes;
+		std::vector< FieldEventCallback> _subscribers;
 	};
 }

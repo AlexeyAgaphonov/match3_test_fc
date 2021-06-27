@@ -5,7 +5,7 @@
 
 #include "Node.hpp"
 #include "Match3/Logic/Field.hpp"
-
+#include "Match3/Visual/FieldNode.hpp"
 #include <functional>
 
 namespace core
@@ -24,6 +24,10 @@ namespace core
 
 		core::Node* GetRootNode() { return _rootNode.get();  }
 	private:
+		void NewField();
+		void EventFromField(match3::FieldEvent event);
+	private:
+		int _lastFieldSize = 4;
 		sf::RenderStates _renderStates;
 		
 		std::unique_ptr<Node> _rootNode;

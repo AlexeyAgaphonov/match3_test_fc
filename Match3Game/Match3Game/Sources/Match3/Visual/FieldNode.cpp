@@ -11,6 +11,18 @@ using namespace match3;
 #include "ChipNode.hpp"
 
 
+sf::Vector2f FieldNode::CalcPositionBySize(int width, int height)
+{
+	return sf::Vector2f((1024.f - width) / 2, 768 / 2 - height / 2);
+}
+
+
+sf::Vector2f FieldNode::CalcPositionByField(std::shared_ptr<Field> field)
+{
+	return CalcPositionBySize(field->GetChipsField().size() * ChipDistance, field->GetChipsField()[0].size() * ChipDistance);
+}
+
+
 FieldNode::FieldNode(std::shared_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
 	, _cursor(5)
@@ -19,8 +31,7 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 	_width = field->GetChipsField().size() * ChipDistance;
 	_height = field->GetChipsField()[0].size() * ChipDistance;
 
-	sf::Vector2f pos((1024.f - _width) / 2, 768 / 2 - _height / 2);
-	setPosition(pos);
+	setPosition(CalcPositionBySize(_width, _height));
 	auto scale = getScale();
 
 	_cursor.setFillColor(sf::Color::White);
@@ -41,8 +52,13 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 		}
 		++x;
 	}
-	
 }
+
+void FieldNode::SubscribeOnEvents(FieldEventCallback cb)
+{
+	_subscribers.push_back(cb);
+}
+
 
 void FieldNode::InnerUpdate(float dt)
 {
@@ -127,7 +143,7 @@ void FieldNode::InnerUpdate(float dt)
 						// Perhaps should it be in another thread?
 						if (!HasFieldSwipes(_field->GetChipsField()))
 						{
-							std::cout << "GAME OVER" << std::endl;
+							EmitEvent(FieldEvent::DoNotHaveSwipes);
 						}
 					}
 				}
@@ -307,3 +323,13 @@ void FieldNode::StartFallingChips()
 {
 	_chipsAreFalling = true;
 }
+
+void FieldNode::EmitEvent(FieldEvent event)
+{
+	for (auto& subscriber: _subscribers)
+	{
+		subscriber(event);
+	}
+}
+
+
