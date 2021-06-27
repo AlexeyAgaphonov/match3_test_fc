@@ -8,6 +8,7 @@ namespace match3
 {
 	constexpr float ChipSwipeTime = 0.5f;
 	constexpr float ChipFadeInTime = 0.5f;
+	constexpr float ChipFallingSpeed = 500.f;
 	
 	class ChipNode : public core::Node
 	{

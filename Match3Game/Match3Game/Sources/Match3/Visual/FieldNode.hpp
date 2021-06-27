@@ -26,6 +26,9 @@ namespace match3
 		void SubscribeOnEvents(FieldEventCallback cb);
 	protected:
 		void InnerUpdate(float dt) override;
+		void UpdateFallingChips(float dt);
+		void UpdateBlocker(float dt);
+		void UpdateFieldChecker(float dt);
 		
 		bool InnerMouseDown(const sf::Vector2f& pos) override;
 		void InnerMouseCancel() override;
@@ -35,7 +38,7 @@ namespace match3
 		ChipPos GetSelectedChipPosByRenderPos(const sf::Vector2f& pos);
 		void StartSwiping(const ChipPos& from, SwipeDirection dir);
 
-		bool IsBlocked() const { return _chipsAreFalling  || _blockerTimer > 0.f;  }
+		bool IsBlocked() const { return _areChipsFalling  || _blockerTimer > 0.f;  }
 
 		sf::Vector2f ConvertChipPosToPosition(const ChipPos& chipPos);
 
@@ -52,16 +55,17 @@ namespace match3
 		bool TryToSwipe(const ChipPos &chipPos, SwipeDirection dir);
 
 		void EmitEvent(FieldEvent event);
+
+		bool AreChipsFalling() const { return _areChipsFalling; }
+
 	private:
-		bool _chipsAreFalling = false;
+		bool _areChipsFalling = false;
 		float _blockerTimer = 0.f;
 		
 		bool _mousePressed = false;
 		float _width;
 		float _height;
 		
-		sf::Font _font;
-		sf::CircleShape _cursor;
 		ChipPos _selectedChip;
 		const ChipPos EMPTY_CHIP_POS = ChipPos(-1, 1);
 		

@@ -25,7 +25,6 @@ sf::Vector2f FieldNode::CalcPositionByField(std::shared_ptr<Field> field)
 
 FieldNode::FieldNode(std::shared_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
-	, _cursor(5)
 {
 
 	_width = field->GetChipsField().size() * ChipDistance;
@@ -33,9 +32,6 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 
 	setPosition(CalcPositionBySize(_width, _height));
 	auto scale = getScale();
-
-	_cursor.setFillColor(sf::Color::White);
-	_cursor.setOutlineColor(sf::Color::Black);
 
 	_selectedChip = EMPTY_CHIP_POS;
 
@@ -62,95 +58,109 @@ void FieldNode::SubscribeOnEvents(FieldEventCallback cb)
 
 void FieldNode::InnerUpdate(float dt)
 {
-	const float FALLING_SPEED = 500.f;
-	if (_chipsAreFalling)
+	if (AreChipsFalling())
 	{
-		_chipsAreFalling = false;
-		for (auto& column: _chipNodes)
-		{
-			int indexY = 0;
-			for (auto& chipNode: column)
-			{
-				auto currPos = chipNode->getPosition();
-				const auto needPosY = ConvertChipPosToPosition({ 0, indexY }).y;
-				if (currPos.y < needPosY)
-				{
-					currPos.y += FALLING_SPEED * dt;
-					_chipsAreFalling = true;
-				}
-				else
-				{
-					currPos.y = needPosY;
-				}
-				chipNode->setPosition(currPos);
-				
-				++indexY;
-			}
-		}
-		if (!_chipsAreFalling)
-		{
-			MoveChips();
-		}
+		UpdateFallingChips(dt);
 	}
 	else
 	{
-		if (_blockerTimer > 0.f)
+		UpdateBlocker(dt);
+
+		UpdateFieldChecker(dt);
+	}
+	
+}
+
+void FieldNode::UpdateFallingChips(float dt)
+{
+	_areChipsFalling = false;
+	for (auto& column : _chipNodes)
+	{
+		int indexY = 0;
+		for (auto& chipNode : column)
 		{
-			_blockerTimer -= dt;
-			if (_blockerTimer < 0.f)
+			auto currPos = chipNode->getPosition();
+			const auto needPosY = ConvertChipPosToPosition({ 0, indexY }).y;
+			if (currPos.y < needPosY)
 			{
-				_blockerTimer = 0.f;
+				currPos.y += ChipFallingSpeed * dt;
+				_areChipsFalling = true;
 			}
-		}
-
-		if (_checkerMatchField.activated)
-		{
-			_checkerMatchField.timer += dt;
-			if (_checkerMatchField.timer > _checkerMatchField.duration)
+			else
 			{
-				_checkerMatchField.timer = _checkerMatchField.duration;
-				_checkerMatchField.activated = false;
+				currPos.y = needPosY;
+			}
+			chipNode->setPosition(currPos);
 
-				if (_field)
+			++indexY;
+		}
+	}
+	if (!_areChipsFalling)
+	{
+		MoveChips();
+	}
+}
+
+void FieldNode::UpdateBlocker(float dt)
+{
+	if (_blockerTimer > 0.f)
+	{
+		_blockerTimer -= dt;
+		if (_blockerTimer < 0.f)
+		{
+			_blockerTimer = 0.f;
+		}
+	}
+}
+
+void FieldNode::UpdateFieldChecker(float dt)
+{
+	if (_checkerMatchField.activated)
+	{
+		_checkerMatchField.timer += dt;
+		if (_checkerMatchField.timer > _checkerMatchField.duration)
+		{
+			_checkerMatchField.timer = _checkerMatchField.duration;
+			_checkerMatchField.activated = false;
+
+			if (_field)
+			{
+				std::vector<ChipPos> wereDestroyed;
+				std::vector<std::pair<ChipPos, Chip>> newChips;
+				_field->MatchChips();
+				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
+				RemoveChipsFromField(wereDestroyed);
+
+				std::vector<int> howManyChipsNeeds;
+				howManyChipsNeeds.reserve(_chipNodes.size());
+				for (auto i = 0; i < _chipNodes.size(); ++i)
 				{
-					std::vector<ChipPos> wereDestroyed;
-					std::vector<std::pair<ChipPos, Chip>> newChips;
-					_field->MatchChips();
-					_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
-					RemoveChipsFromField(wereDestroyed);
+					howManyChipsNeeds.push_back(_field->GetChipsField()[i].size() - _chipNodes[i].size());
+				}
+				for (auto& newChipsPair : newChips)
+				{
+					const auto& pos = newChipsPair.first;
+					const auto& chip = newChipsPair.second;
+					AddChipNode(chip.GetType(), pos + ChipPos(0, howManyChipsNeeds[pos.x]));
+				}
 
-					std::vector<int> howManyChipsNeeds;
-					howManyChipsNeeds.reserve(_chipNodes.size());
-					for (auto i = 0; i < _chipNodes.size(); ++i)
-					{
-						howManyChipsNeeds.push_back(_field->GetChipsField()[i].size() - _chipNodes[i].size());
-					}
-					for (auto& newChipsPair : newChips)
-					{
-						const auto& pos = newChipsPair.first;
-						const auto& chip = newChipsPair.second;
-						AddChipNode(chip.GetType(), pos + ChipPos(0, howManyChipsNeeds[pos.x]));
-					}
+				StartFallingChips();
 
-					StartFallingChips();
-					
-					if (!wereDestroyed.empty())
+				if (!wereDestroyed.empty())
+				{
+					CheckFieldAfterTime(ChipSwipeTime);
+				}
+				else
+				{
+					// Perhaps should it be in another thread?
+					if (!HasFieldSwipes(_field->GetChipsField()))
 					{
-						CheckFieldAfterTime(ChipSwipeTime);
-					}
-					else
-					{
-						// Perhaps should it be in another thread?
-						if (!HasFieldSwipes(_field->GetChipsField()))
-						{
-							EmitEvent(FieldEvent::DoNotHaveSwipes);
-						}
+						EmitEvent(FieldEvent::DoNotHaveSwipes);
 					}
 				}
 			}
 		}
 	}
-	
 }
 
 
@@ -166,8 +176,6 @@ bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
 	{
 		return false;
 	}
-	// TODO: Debug
-	_cursor.setPosition(pos);
 
 	auto tempChipPos = GetSelectedChipPosByRenderPos(pos);
 	if (_selectedChip == EMPTY_CHIP_POS)
@@ -321,7 +329,7 @@ void FieldNode::CheckFieldAfterTime(float time)
 
 void FieldNode::StartFallingChips()
 {
-	_chipsAreFalling = true;
+	_areChipsFalling = true;
 }
 
 void FieldNode::EmitEvent(FieldEvent event)
