@@ -70,16 +70,14 @@ bool match3::DoesAnyMatchExist(const ChipsField& field)
 int match3::CountChipsAtMatchOnLine(const std::vector<Chip>& verticalLine, int posIndex, ChipType type)
 {
 	const auto height = verticalLine.size();
-	auto checkRanges = [height](int pos)->bool { return pos > 0 && pos < height; };
+	auto checkRanges = [height](int pos)->bool { return pos >= 0 && pos < height; };
 	bool shouldCheckUpper = true;
 	bool shouldCheckBottom = true;
 	int howMuchChipsInMatch = 1;
 	
 	for (size_t i = 1; i < height; ++i)
 	{
-		if (int newPosY = posIndex + i; shouldCheckUpper 
-			&& checkRanges(newPosY) 
-			&& verticalLine[newPosY].GetType() == type)
+		if (int newPosY = posIndex + i; shouldCheckUpper && checkRanges(newPosY) && verticalLine[newPosY].GetType() == type)
 		{
 			++howMuchChipsInMatch;
 		}
@@ -121,11 +119,6 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 		}
 		horizontalLine[newPos.x] = verticalLine[newPos.y];
 		
-		//if (ToCountVerticalMatchedLine(verticalLine, newPos, verticalLine[newPos.y].GetType()) >= 3
-		//	|| ToCountHorizontalMatchedLine(field, pos + SwipeDirectionConvertToOffset(direction), field[pos.x][pos.y].GetType()) >= 3)
-		//{
-		//	willHave = true;
-		//}
 		if (CountChipsAtMatchOnLine(verticalLine, newPos.y, verticalLine[newPos.y].GetType()) >= 3 ||
 			CountChipsAtMatchOnLine(horizontalLine, newPos.x, horizontalLine[newPos.x].GetType()) >= 3)
 		{

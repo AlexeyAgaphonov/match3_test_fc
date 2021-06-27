@@ -61,31 +61,56 @@ void Field::MatchChips()
 {
 	for (auto& column: _chipsField)
 	{
-		ChipType prevChipType = ChipType::ColorSize;
-		int chipAmount = 1;
-		int posY = 0;
-		for (auto& chip: column)
+		std::vector<Chip*> pVerticalLine;
+		std::for_each(column.begin(), column.end(), [&pVerticalLine](auto& chip) { pVerticalLine.push_back(&chip); });
+		MatchLine(pVerticalLine);
+	}
+	for (int i = 0; i < _chipsField[0].size(); ++i)
+	{
+		std::vector<Chip*> pHorizontalLine;
+		for (int j = 0; j < _chipsField.size(); ++j)
 		{
-			if (chip.GetType() != prevChipType)
-			{
-				if (chipAmount >= balance::AmountForMatch)
-				{
-					for (int i = 0; i < chipAmount; ++i)
-					{
-						column[i + posY - chipAmount].Destroy();
-					}
-				}
-				prevChipType = chip.GetType();
-				chipAmount = 1;
-			}
-			else
-			{
-				++chipAmount;
-			}
-			++posY;
+			pHorizontalLine.push_back(&_chipsField[j][i]);
 		}
+		MatchLine(pHorizontalLine);
 	}
 }
+
+void Field::MatchLine(std::vector<Chip*>& line)
+{
+	ChipType prevType = ChipType::ColorSize;
+	int chipAmount = 1;
+	int posY = 0;
+	auto funcDestroyer = [&]()
+	{
+		if (chipAmount >= balance::AmountForMatch)
+		{
+			for (int i = 0; i < chipAmount; ++i)
+			{
+				line[i + posY - chipAmount]->Destroy();
+			}
+		}
+	};
+	for (auto chip : line)
+	{
+		
+		// Check vertical lines
+		if (chip->GetType() != prevType)
+		{
+			funcDestroyer();
+			prevType = chip->GetType();
+			chipAmount = 1;
+		}
+		else
+		{
+			++chipAmount;
+		}
+		++posY;
+	}
+	funcDestroyer();
+}
+
+
 
 void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips)
 {

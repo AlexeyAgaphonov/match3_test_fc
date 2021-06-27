@@ -37,8 +37,8 @@ namespace match3
 		bool TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir);
 		void MatchChips();
 		void RemoveDestroyedAndGen(std::vector<ChipPos> &wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips);
-	protected:
-		
+	private:
+		void MatchLine(std::vector<Chip*>& line);
 	private:
 		ChipsField _chipsField;
 	};
