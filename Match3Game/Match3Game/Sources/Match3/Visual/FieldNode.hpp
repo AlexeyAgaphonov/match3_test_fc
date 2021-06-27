@@ -38,6 +38,8 @@ namespace match3
 		void CheckFieldAfterTime(float time);
 
 		void StartFallingChips();
+
+		bool TryToSwipe(const ChipPos &chipPos, SwipeDirection dir);
 	private:
 		bool _chipsAreFalling = false;
 		float _blockerTimer = 0.f;

@@ -192,25 +192,9 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 {
 	if (_field)
 	{
-		if (_field->TryToSwipeChip(_selectedChip, dir))
+		if (TryToSwipe(_selectedChip, dir))
 		{
-			const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
-			const auto selectedPosName = ChipNode::ConvertChipPosToName(_selectedChip);
-			const auto newPosName = ChipNode::ConvertChipPosToName(newPos);
-
-			auto& selectedChip = _chipNodes[_selectedChip.x][_selectedChip.y];
-			auto& secondChip = _chipNodes[newPos.x][newPos.y];
-
-			selectedChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(dir));
-			secondChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
-
-			selectedChip->AcceptMessage("ChangeName", newPosName);
-			secondChip->AcceptMessage("ChangeName", selectedPosName);
-
-			CheckFieldAfterTime(ChipSwipeTime);
-			
-			_chipNodes[_selectedChip.x][_selectedChip.y] = secondChip;
-			_chipNodes[newPos.x][newPos.y] = selectedChip;
+			// SUCCESSFUL SWIPE
 		}
 		else
 		{
@@ -220,6 +204,36 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 		}
 	}
 }
+
+bool FieldNode::TryToSwipe(const ChipPos& chipPos, SwipeDirection dir)
+{
+	if (_field->TryToSwipeChip(chipPos, dir))
+	{
+		const auto chipPos2 = chipPos + SwipeDirectionConvertToOffset(dir);
+		const auto selectedPosName = ChipNode::ConvertChipPosToName(chipPos);
+		const auto newPosName = ChipNode::ConvertChipPosToName(chipPos2);
+
+		auto selectedChip = _chipNodes[chipPos.x][chipPos.y];
+		auto secondChip = _chipNodes[chipPos2.x][chipPos2.y];
+
+		selectedChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(dir));
+		secondChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
+
+		selectedChip->AcceptMessage("ChangeName", newPosName);
+		secondChip->AcceptMessage("ChangeName", selectedPosName);
+
+		CheckFieldAfterTime(ChipSwipeTime);
+
+		selectedChip->AcceptMessage("Unselect", "");
+		secondChip->AcceptMessage("Unselect", "");
+
+		_chipNodes[chipPos.x][chipPos.y] = secondChip;
+		_chipNodes[chipPos2.x][chipPos2.y] = selectedChip;
+		return true;
+	}
+	return false;
+}
+
 
 
 sf::Vector2f FieldNode::ConvertChipPosToPosition(const ChipPos& chipPos)
