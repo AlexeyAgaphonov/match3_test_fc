@@ -77,6 +77,11 @@ void FieldNode::InnerUpdate(float dt)
 					const auto& chip = newChipsPair.second;
 					AddChipNode(chip.GetType(), pos);
 				}
+
+				if (!wereDestroyed.empty())
+				{
+					CheckFieldAfterTime(ChipSwipeTime);
+				}
 			}
 		}
 	}
@@ -145,7 +150,6 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 {
 	if (_field)
 	{
-		_blockerTimer += ChipSwipeTime;
 		if (_field->TryToSwipeChip(_selectedChip, dir))
 		{
 			const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
@@ -161,15 +165,14 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 			selectedChip->AcceptMessage("ChangeName", newPosName);
 			secondChip->AcceptMessage("ChangeName", selectedPosName);
 
-			_checkerMatchField.activated = true;
-			_checkerMatchField.timer = 0.f;
-			_checkerMatchField.duration = ChipSwipeTime;
-
+			CheckFieldAfterTime(ChipSwipeTime);
+			
 			_chipNodes[_selectedChip.x][_selectedChip.y] = secondChip;
 			_chipNodes[newPos.x][newPos.y] = selectedChip;
 		}
 		else
 		{
+			_blockerTimer += ChipSwipeTime;
 			auto& selectedChip = _chipNodes[_selectedChip.x][_selectedChip.y];
 			selectedChip->AcceptMessage("SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
 		}
@@ -225,4 +228,13 @@ void FieldNode::AddChipNode(ChipType type, const ChipPos& chipPos)
 	chipNode->setPosition(ConvertChipPosToPosition(chipPos));
 	_chipNodes[chipPos.x].push_back(chipNode);
 	AddChild(std::move(chipNode));
+}
+
+void FieldNode::CheckFieldAfterTime(float time)
+{
+	_blockerTimer += time;
+
+	_checkerMatchField.activated = true;
+	_checkerMatchField.timer = 0.f;
+	_checkerMatchField.duration = time;
 }

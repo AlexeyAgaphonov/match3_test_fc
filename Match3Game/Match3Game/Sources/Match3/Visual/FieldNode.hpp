@@ -34,6 +34,8 @@ namespace match3
 		void MoveChips();
 
 		void AddChipNode(ChipType type, const ChipPos& chipPos);
+
+		void CheckFieldAfterTime(float time);
 	private:
 		float _blockerTimer = 0.f;
 		
