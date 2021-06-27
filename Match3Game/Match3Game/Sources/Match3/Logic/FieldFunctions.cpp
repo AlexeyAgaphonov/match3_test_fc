@@ -1,5 +1,7 @@
 #include "FieldFunctions.hpp"
 
+#include "Balance.hpp"
+
 #include <array>
 
 using namespace match3;
@@ -155,8 +157,8 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 		horizontalLine[pos.x] = horizontalLine[newPos.x];
 		horizontalLine[newPos.x] = verticalLine[newPos.y];
 		
-		if (CountChipsAtMatchOnLine(verticalLine, newPos.y, verticalLine[newPos.y].GetType()) >= 3 ||
-			CountChipsAtMatchOnLine(horizontalLine, newPos.x, horizontalLine[newPos.x].GetType()) >= 3)
+		if (CountChipsAtMatchOnLine(verticalLine, newPos.y, verticalLine[newPos.y].GetType()) >= balance::AmountForMatch ||
+			CountChipsAtMatchOnLine(horizontalLine, newPos.x, horizontalLine[newPos.x].GetType()) >= balance::AmountForMatch)
 		{
 			willHave = true;
 		}

@@ -121,12 +121,6 @@ void ChipNode::InnerDraw(sf::RenderTarget& target, sf::RenderStates states, sf::
 	currTransform = currTransform.translate(_swipingAnimData.offset);
 	currTransform = currTransform.translate(0.f, -ChipDistance);
 	auto figure = _selected ? GetSelectedChipDrawer(_type) : GetChipDrawer(_type);
-	//if (_fadeInData.timer > 0.f)
-	//{
-	//	auto color = figure.getFillColor();
-	//	color.a *= _fadeInData.timer / ChipFadeInTime;
-	//	figure.setFillColor(color);
-	//}
 	target.draw(figure, currTransform);
 
 }
