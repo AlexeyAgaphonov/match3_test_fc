@@ -13,9 +13,7 @@ namespace match3
 
 	bool DoesAnyMatchExist(const match3::ChipsField& field);
 
-	int ToCountVerticalMatchedLine(const std::vector<Chip>& verticalLine, const ChipPos& pos, ChipType type);
-	
-	int ToCountHorizontalMatchedLine(const ChipsField& field, const ChipPos& pos);
+	int CountChipsAtMatchOnLine(const std::vector<Chip>& verticalLine, int posIndex, ChipType type);
 	
 	bool WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
 
