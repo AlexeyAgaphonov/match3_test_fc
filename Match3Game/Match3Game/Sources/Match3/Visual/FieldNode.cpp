@@ -46,45 +46,87 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 
 void FieldNode::InnerUpdate(float dt)
 {
-	if (_blockerTimer > 0.f)
+	const float FALLING_SPEED = 500.f;
+	if (_chipsAreFalling)
 	{
-		_blockerTimer -= dt;
-		if (_blockerTimer < 0.f)
+		_chipsAreFalling = false;
+		for (auto& column: _chipNodes)
 		{
-			_blockerTimer = 0.f;
+			int indexY = 0;
+			for (auto& chipNode: column)
+			{
+				auto currPos = chipNode->getPosition();
+				const auto needPosY = ConvertChipPosToPosition({ 0, indexY }).y;
+				if (currPos.y < needPosY)
+				{
+					currPos.y += FALLING_SPEED * dt;
+					_chipsAreFalling = true;
+				}
+				else
+				{
+					currPos.y = needPosY;
+				}
+				chipNode->setPosition(currPos);
+				
+				++indexY;
+			}
+		}
+		if (!_chipsAreFalling)
+		{
+			MoveChips();
 		}
 	}
-
-	if (_checkerMatchField.activated)
+	else
 	{
-		_checkerMatchField.timer += dt;
-		if (_checkerMatchField.timer > _checkerMatchField.duration)
+		if (_blockerTimer > 0.f)
 		{
-			_checkerMatchField.timer = _checkerMatchField.duration;
-			_checkerMatchField.activated = false;
-
-			if (_field)
+			_blockerTimer -= dt;
+			if (_blockerTimer < 0.f)
 			{
-				std::vector<ChipPos> wereDestroyed;
-				std::vector<std::pair<ChipPos, Chip>> newChips;
-				_field->MatchChips();
-				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
-				RemoveChipsFromField(wereDestroyed);
-				MoveChips();
-				for (auto& newChipsPair : newChips)
-				{
-					const auto& pos = newChipsPair.first;
-					const auto& chip = newChipsPair.second;
-					AddChipNode(chip.GetType(), pos);
-				}
+				_blockerTimer = 0.f;
+			}
+		}
 
-				if (!wereDestroyed.empty())
+		if (_checkerMatchField.activated)
+		{
+			_checkerMatchField.timer += dt;
+			if (_checkerMatchField.timer > _checkerMatchField.duration)
+			{
+				_checkerMatchField.timer = _checkerMatchField.duration;
+				_checkerMatchField.activated = false;
+
+				if (_field)
 				{
-					CheckFieldAfterTime(ChipSwipeTime);
+					std::vector<ChipPos> wereDestroyed;
+					std::vector<std::pair<ChipPos, Chip>> newChips;
+					_field->MatchChips();
+					_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
+					RemoveChipsFromField(wereDestroyed);
+
+					std::vector<int> howManyChipsNeeds;
+					howManyChipsNeeds.reserve(_chipNodes.size());
+					for (auto i = 0; i < _chipNodes.size(); ++i)
+					{
+						howManyChipsNeeds.push_back(_field->GetChipsField()[i].size() - _chipNodes[i].size());
+					}
+					for (auto& newChipsPair : newChips)
+					{
+						const auto& pos = newChipsPair.first;
+						const auto& chip = newChipsPair.second;
+						AddChipNode(chip.GetType(), pos + ChipPos(0, howManyChipsNeeds[pos.x]));
+					}
+
+					StartFallingChips();
+					
+					if (!wereDestroyed.empty())
+					{
+						CheckFieldAfterTime(ChipSwipeTime);
+					}
 				}
 			}
 		}
 	}
+	
 }
 
 
@@ -237,4 +279,9 @@ void FieldNode::CheckFieldAfterTime(float time)
 	_checkerMatchField.activated = true;
 	_checkerMatchField.timer = 0.f;
 	_checkerMatchField.duration = time;
+}
+
+void FieldNode::StartFallingChips()
+{
+	_chipsAreFalling = true;
 }

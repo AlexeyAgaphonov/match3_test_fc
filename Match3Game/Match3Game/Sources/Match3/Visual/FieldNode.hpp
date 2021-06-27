@@ -25,7 +25,7 @@ namespace match3
 		ChipPos GetSelectedChipPosByRenderPos(const sf::Vector2f& pos);
 		void StartSwiping(const ChipPos& from, SwipeDirection dir);
 
-		bool IsBlocked() const { return _blockerTimer > 0.f;  }
+		bool IsBlocked() const { return _chipsAreFalling  || _blockerTimer > 0.f;  }
 
 		sf::Vector2f ConvertChipPosToPosition(const ChipPos& chipPos);
 
@@ -36,7 +36,10 @@ namespace match3
 		void AddChipNode(ChipType type, const ChipPos& chipPos);
 
 		void CheckFieldAfterTime(float time);
+
+		void StartFallingChips();
 	private:
+		bool _chipsAreFalling = false;
 		float _blockerTimer = 0.f;
 		
 		bool _mousePressed = false;
