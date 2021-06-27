@@ -26,15 +26,22 @@ namespace match3
 		bool _selected;
 		ChipType _type;
 
-		struct SwipingAnimData
+		enum class AnimDataType
 		{
-			bool match = false;
+			BadSwipe,
+			SuccessfullSwipe,
+			Shake,
+			None
+		};
+		struct
+		{
+			AnimDataType type = AnimDataType::None;
 			bool activated = false;
 			const float duration = ChipSwipeTime;
 			float timer = 0.f;
 			SwipeDirection dir = SwipeDirection::None;
 			sf::Vector2f offset;
-		} _swipingAnimData;
+		} _animData;
 
 		struct FadeInData
 		{

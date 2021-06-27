@@ -81,25 +81,29 @@ void ChipNode::InnerUpdate(float dt)
 		{
 			_swipingAnimData.timer = 0.f;
 			_swipingAnimData.activated = false;
-			if (_swipingAnimData.match)
+			if (_swipingAnimData.type == AnimDataType::SuccessfullSwipe)
 			{
 				setPosition(getPosition() + _swipingAnimData.offset);
 			}
 		}
 		sf::Vector2f vec;
-		if (_swipingAnimData.match)
+		if (_swipingAnimData.type == AnimDataType::SuccessfullSwipe)
 		{
 			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
 				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
 			vec *= ChipDistance * 1.0f;
 			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI_2));
 		}
-		else
+		else if (_swipingAnimData.type == AnimDataType::BadSwipe)
 		{
 			vec = sf::Vector2f(SwipeDirectionConvertToOffset(_swipingAnimData.dir).x,
 				-SwipeDirectionConvertToOffset(_swipingAnimData.dir).y);
 			vec *= ChipDistance * 0.5f;
 			vec *= static_cast<float>(sin((_swipingAnimData.timer / _swipingAnimData.duration) * M_PI));
+		}
+		else if (_swipingAnimData.type == AnimDataType::Shake)
+		{
+			
 		}
 
 		_swipingAnimData.offset = vec;
