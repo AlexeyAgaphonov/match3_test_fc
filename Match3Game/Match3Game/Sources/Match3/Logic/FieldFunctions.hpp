@@ -3,6 +3,8 @@
 
 namespace match3
 {
+	bool HasFieldSwipes(const ChipsField& field);
+	
 	bool DoesChipPosExistsInField(const ChipsField& field, const ChipPos& pos);
 
 	const ChipPos& SwipeDirectionConvertToOffset(SwipeDirection dir);

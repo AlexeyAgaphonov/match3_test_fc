@@ -22,6 +22,39 @@ const ChipPos& match3::SwipeDirectionConvertToOffset(SwipeDirection dir)
 
 }
 
+bool match3::HasFieldSwipes(const ChipsField& field)
+{
+	bool hasSwipes = false;
+	std::vector<SwipeDirection> dirsForChecking = { SwipeDirection::Right, SwipeDirection::Up };
+	
+	for (auto i = 0; i < field.size(); ++i)
+	{
+		auto height = field[i].size();
+		for (auto j = 0; j < height; ++j)
+		{
+			ChipPos pos(i, j);
+			for (auto dir: dirsForChecking)
+			{
+				if (WillChipHaveMatchAfterSwipe(field, pos, dir) ||
+					WillChipHaveMatchAfterSwipe(field, pos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
+				{
+					hasSwipes = true;
+					break;
+				}
+			}
+			if (hasSwipes)
+			{
+				break;
+			}
+		}
+		if (hasSwipes)
+		{
+			break;
+		}
+	}
+	
+	return hasSwipes;
+}
 
 bool match3::CanChipBeSwipedByDirection(const ChipsField& field, const ChipPos& pos, SwipeDirection direction)
 {
@@ -110,6 +143,7 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 	{
 		const auto checkedTpe = field[pos.x][pos.y].GetType();
 		auto verticalLine = field[newPos.x];
+		verticalLine[pos.y] = verticalLine[newPos.y];
 		verticalLine[newPos.y] = field[pos.x][pos.y];
 		std::vector<Chip> horizontalLine;
 		horizontalLine.reserve(field.size());
@@ -117,6 +151,8 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 		{
 			horizontalLine.push_back(column[newPos.y]);
 		}
+
+		horizontalLine[pos.x] = horizontalLine[newPos.x];
 		horizontalLine[newPos.x] = verticalLine[newPos.y];
 		
 		if (CountChipsAtMatchOnLine(verticalLine, newPos.y, verticalLine[newPos.y].GetType()) >= 3 ||

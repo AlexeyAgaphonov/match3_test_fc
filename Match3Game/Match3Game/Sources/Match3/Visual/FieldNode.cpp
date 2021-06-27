@@ -122,6 +122,14 @@ void FieldNode::InnerUpdate(float dt)
 					{
 						CheckFieldAfterTime(ChipSwipeTime);
 					}
+					else
+					{
+						// Perhaps should it be in another thread?
+						if (!HasFieldSwipes(_field->GetChipsField()))
+						{
+							std::cout << "GAME OVER" << std::endl;
+						}
+					}
 				}
 			}
 		}
