@@ -108,8 +108,7 @@ void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vect
 				++y;
 				return ret;
 			});
-		++x;
-
+		
 		column.erase(it_erase, column.end());
 
 		while (column.size() < columnSize)
@@ -119,6 +118,7 @@ void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vect
 			newChips.push_back({ChipPos(x, curY), newChip });
 			column.push_back(std::move(newChip));
 		}
+		++x;
 	}
 }
 

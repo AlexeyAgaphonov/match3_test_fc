@@ -79,7 +79,7 @@ void ChipNode::InnerUpdate(float dt)
 		_swipingAnimData.timer += dt;
 		if (_swipingAnimData.timer > _swipingAnimData.duration)
 		{
-			_swipingAnimData.timer = _swipingAnimData.match ? _swipingAnimData.duration : 0.f;
+			_swipingAnimData.timer = 0.f;
 			_swipingAnimData.activated = false;
 		}
 		sf::Vector2f vec;
