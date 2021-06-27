@@ -48,7 +48,8 @@ void Field::Init(int width, int height)
 bool Field::TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir)
 {
 	bool successfulSwipe = false;
-	if (WillChipHaveMatchAfterSwipe(_chipsField, chipPos, dir))
+	if (WillChipHaveMatchAfterSwipe(_chipsField, chipPos, dir) ||
+		WillChipHaveMatchAfterSwipe(_chipsField, chipPos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
 	{
 		auto chipPos2 = chipPos + SwipeDirectionConvertToOffset(dir);
 		std::swap(_chipsField[chipPos.x][chipPos.y], _chipsField[chipPos2.x][chipPos2.y]);
