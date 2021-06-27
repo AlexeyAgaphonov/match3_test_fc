@@ -21,7 +21,7 @@ namespace match3
 		static sf::Vector2f CalcPositionBySize(int width, int height);
 		static sf::Vector2f CalcPositionByField(std::shared_ptr<Field> field);
 		
-		FieldNode(std::shared_ptr<Field> field);
+		FieldNode(boost::intrusive_ptr<Field> field);
 
 		void SubscribeOnEvents(FieldEventCallback cb);
 	protected:
@@ -69,7 +69,7 @@ namespace match3
 		ChipPos _selectedChip;
 		const ChipPos EMPTY_CHIP_POS = ChipPos(-1, 1);
 		
-		std::shared_ptr<Field> _field;
+		boost::intrusive_ptr<Field> _field;
 
 		struct
 		{

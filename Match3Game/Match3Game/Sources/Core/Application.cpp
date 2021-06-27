@@ -1,14 +1,13 @@
 #include "Application.hpp"
 
 #include <iostream>
-
+#include "Match3/Logic/Balance.hpp"
 
 
 core::Application::Application()
 	: _window(sf::VideoMode(1024, 768), "Match3 Game")
 {
-	//texture1.loadFromFile("bg.png");
-	//sprite.setTexture(texture1);
+	match3::balance::InitSeed();
 	_rootNode.reset(new Node("Root"));
 	
 	NewField();
@@ -16,7 +15,7 @@ core::Application::Application()
 
 void core::Application::NewField()
 {
-	_field = std::make_shared<match3::Field>();
+	_field.reset(new match3::Field());
 	_field->Init(_lastFieldSize, _lastFieldSize);
 	auto fieldNode = new match3::FieldNode(_field);
 	fieldNode->SubscribeOnEvents([this](match3::FieldEvent event)
@@ -94,9 +93,4 @@ void core::Application::HandleUpdate()
 			sf::sleep(sf::milliseconds(TicksDelay) - deltaTime);
 		}
 	}
-}
-
-std::shared_ptr<match3::Field> core::Application::GetFieldPtr()
-{
-	return _field;
 }

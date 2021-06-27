@@ -2,7 +2,7 @@
 #include <vector>
 #include <SFML/Graphics.hpp>
 
-
+#include "Core/RefCounter.hpp"
 #include "Chip.hpp"
 
 namespace match3
@@ -27,7 +27,7 @@ namespace match3
 	std::string ConvertSwipeDirectionToStr(SwipeDirection dir);
 	SwipeDirection ConvertStrToSwipeDirection(const std::string& dirStr);
 
-	class Field
+	class Field : public core::RefCounter
 	{
 	public:
 		Field();

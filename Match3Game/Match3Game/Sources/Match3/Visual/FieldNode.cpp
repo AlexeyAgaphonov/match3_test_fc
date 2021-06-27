@@ -23,7 +23,7 @@ sf::Vector2f FieldNode::CalcPositionByField(std::shared_ptr<Field> field)
 }
 
 
-FieldNode::FieldNode(std::shared_ptr<Field> field)
+FieldNode::FieldNode(boost::intrusive_ptr<Field> field)
 	: Node("FieldNode"), _field(field)
 {
 

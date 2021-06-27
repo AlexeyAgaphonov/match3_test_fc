@@ -7,6 +7,7 @@
 #include "Match3/Logic/Field.hpp"
 #include "Match3/Visual/FieldNode.hpp"
 #include <functional>
+#include <boost/intrusive_ptr.hpp>
 
 namespace core
 {
@@ -20,8 +21,6 @@ namespace core
 
 		void HandleUpdate();
 
-		std::shared_ptr<match3::Field> GetFieldPtr();
-
 		core::Node* GetRootNode() { return _rootNode.get();  }
 	private:
 		void NewField();
@@ -33,7 +32,7 @@ namespace core
 		
 		std::unique_ptr<Node> _rootNode;
 
-		std::shared_ptr<match3::Field> _field;
+		boost::intrusive_ptr<match3::Field> _field;
 		
 		sf::RenderWindow _window;
 	};
