@@ -36,10 +36,7 @@ FieldNode::FieldNode(std::shared_ptr<Field> field)
 		int y = 0;
 		for (const auto& chip : horizontalLine)
 		{
-			Node::Ptr chipNode = new ChipNode(chip.GetType(), ChipNode::ConvertChipPosToName(ChipPos(x, y)));
-			chipNode->setPosition(ConvertChipPosToPosition({x, y}));
-			_chipNodes.back().push_back(chipNode);
-			AddChild(std::move(chipNode));
+			AddChipNode(chip.GetType(), {x, y});
 			++y;
 		}
 		++x;
@@ -73,6 +70,13 @@ void FieldNode::InnerUpdate(float dt)
 				_field->MatchChips();
 				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
 				RemoveChipsFromField(wereDestroyed);
+				MoveChips();
+				for (auto& newChipsPair : newChips)
+				{
+					const auto& pos = newChipsPair.first;
+					const auto& chip = newChipsPair.second;
+					AddChipNode(chip.GetType(), pos);
+				}
 			}
 		}
 	}
@@ -101,7 +105,7 @@ bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
 		{
 			_selectedChip = tempChipPos;
 			_mousePressed = true;
-			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "Select");
+			_chipNodes[_selectedChip.x][_selectedChip.y]->AcceptMessage("Select", "");
 		}
 	}
 	else
@@ -109,12 +113,12 @@ bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
 		if (DoesChipPosNextToAnother(_selectedChip, tempChipPos))
 		{
 			StartSwiping(_selectedChip, CalcDirectionFromChipPoses(_selectedChip, tempChipPos));
-			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "Unselect");
+			_chipNodes[_selectedChip.x][_selectedChip.y]->AcceptMessage("Unselect", "");
 			_selectedChip = EMPTY_CHIP_POS;
 		}
 		else
 		{
-			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "Unselect");
+			_chipNodes[_selectedChip.x][_selectedChip.y]->AcceptMessage("Unselect", "");
 			_selectedChip = EMPTY_CHIP_POS;
 		}
 	}
@@ -147,21 +151,27 @@ void FieldNode::StartSwiping(const ChipPos& from, SwipeDirection dir)
 			const auto newPos = _selectedChip + SwipeDirectionConvertToOffset(dir);
 			const auto selectedPosName = ChipNode::ConvertChipPosToName(_selectedChip);
 			const auto newPosName = ChipNode::ConvertChipPosToName(newPos);
-			
-			SendMessageToChild(selectedPosName, "SwipeAnim", ConvertSwipeDirectionToStr(dir));
-			SendMessageToChild(newPosName, "SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
 
-			SendMessageToChild(selectedPosName, "ChangeName", "tempName");
-			SendMessageToChild(newPosName, "ChangeName", selectedPosName);
-			SendMessageToChild("tempName", "ChangeName", newPosName);
-			
-			
+			auto& selectedChip = _chipNodes[_selectedChip.x][_selectedChip.y];
+			auto& secondChip = _chipNodes[newPos.x][newPos.y];
+
+			selectedChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(dir));
+			secondChip->AcceptMessage("SwipeAnim", ConvertSwipeDirectionToStr(OppositeOfSwipeDirection(dir)));
+
+			selectedChip->AcceptMessage("ChangeName", newPosName);
+			secondChip->AcceptMessage("ChangeName", selectedPosName);
+
 			_checkerMatchField.activated = true;
+			_checkerMatchField.timer = 0.f;
 			_checkerMatchField.duration = ChipSwipeTime;
+
+			_chipNodes[_selectedChip.x][_selectedChip.y] = secondChip;
+			_chipNodes[newPos.x][newPos.y] = selectedChip;
 		}
 		else
 		{
-			SendMessageToChild(ChipNode::ConvertChipPosToName(_selectedChip), "SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
+			auto& selectedChip = _chipNodes[_selectedChip.x][_selectedChip.y];
+			selectedChip->AcceptMessage("SwipeAnimBadly", ConvertSwipeDirectionToStr(dir));
 		}
 	}
 }
@@ -191,4 +201,28 @@ void FieldNode::RemoveChipsFromField(const std::vector<ChipPos>& chipPoses)
 		column.erase(it, column.end());
 		++x;
 	}
+}
+
+void FieldNode::MoveChips()
+{
+	int x = 0;
+	for (auto& column: _chipNodes)
+	{
+		int y = 0;
+		for (auto& chipNode: column)
+		{
+			chipNode->AcceptMessage("ChangeName", ChipNode::ConvertChipPosToName({ x, y }));
+			chipNode->setPosition(ConvertChipPosToPosition({x, y}));
+			++y;
+		}
+		++x;
+	}
+}
+
+void FieldNode::AddChipNode(ChipType type, const ChipPos& chipPos)
+{
+	Node::Ptr chipNode = new ChipNode(type, ChipNode::ConvertChipPosToName(chipPos));
+	chipNode->setPosition(ConvertChipPosToPosition(chipPos));
+	_chipNodes[chipPos.x].push_back(chipNode);
+	AddChild(std::move(chipNode));
 }

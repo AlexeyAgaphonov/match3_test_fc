@@ -30,6 +30,10 @@ namespace match3
 		sf::Vector2f ConvertChipPosToPosition(const ChipPos& chipPos);
 
 		void RemoveChipsFromField(const std::vector<ChipPos>& chipPoses);
+
+		void MoveChips();
+
+		void AddChipNode(ChipType type, const ChipPos& chipPos);
 	private:
 		float _blockerTimer = 0.f;
 		
