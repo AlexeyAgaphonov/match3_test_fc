@@ -3,6 +3,7 @@
 
 #include <ctime>
 
+
 using namespace match3;
 using namespace match3::balance;
 
@@ -34,6 +35,52 @@ void balance::GenerateNewField(int width, int height, ChipsField& field)
 		for (int j = 0; j < height; ++j)
 		{
 			field[i].emplace_back(GenerateNewChip());
+		}
+	}
+
+
+	for (auto& column: field)
+	{
+		ChipType prevType = ChipType::ColorSize;
+		int amountOfThisType = 0;
+		for (auto& chip: column)
+		{
+			if (chip.GetType() != prevType)
+			{
+				prevType = chip.GetType();
+				amountOfThisType = 1;
+			}
+			else
+			{
+				++amountOfThisType;
+				if (amountOfThisType == 3)
+				{
+					chip = GenerateNewChip();
+				}
+			}
+		}
+	}
+
+	for (auto j = 0; j < height; ++j)
+	{
+		ChipType prevType = ChipType::ColorSize;
+		int amountOfThisType = 0;
+		for (auto i = 0; i < width; ++i)
+		{
+			auto& chip = field[i][j];
+			if (chip.GetType() != prevType)
+			{
+				prevType = chip.GetType();
+				amountOfThisType = 1;
+			}
+			else
+			{
+				++amountOfThisType;
+				if (amountOfThisType == 3)
+				{
+					chip = GenerateNewChip();
+				}
+			}
 		}
 	}
 }
