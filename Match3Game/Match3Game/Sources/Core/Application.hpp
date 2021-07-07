@@ -27,10 +27,10 @@ namespace core
 		void EventFromField(match3::FieldEvent event);
 	private:
 		bool _recreateField = false;
-		int _lastFieldSize = 4;
+		int _lastFieldSize = 10;
 		sf::RenderStates _renderStates;
 		
-		std::unique_ptr<Node> _rootNode;
+		Node::Ptr _rootNode;
 
 		boost::intrusive_ptr<match3::Field> _field;
 		
