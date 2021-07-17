@@ -17,9 +17,9 @@ namespace match3
 
 	int CountChipsAtMatchOnLine(const std::vector<Chip>& verticalLine, int posIndex, ChipType type);
 	
-	bool WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
+	bool IsChipMatchedBySwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction);
 
-	bool DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second);
+	bool AreChipsNearby(const ChipPos& first, const ChipPos& second);
 
 	SwipeDirection CalcDirectionFromChipPoses(const ChipPos& first, const ChipPos& second);
 

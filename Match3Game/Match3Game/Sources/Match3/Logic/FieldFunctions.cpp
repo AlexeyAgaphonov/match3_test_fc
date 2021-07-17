@@ -6,7 +6,6 @@
 
 using namespace match3;
 
-static std::array<ChipPos, 5> StaticCache = { ChipPos(0, 0), ChipPos(0, 1), ChipPos(-1, 0), ChipPos(1, 0), ChipPos(0, -1) };
 static std::array<SwipeDirection, 4> DirectionsCache = { SwipeDirection::Up, SwipeDirection::Left, SwipeDirection::Right, SwipeDirection::Down };
 
 
@@ -18,9 +17,8 @@ bool match3::DoesChipPosExistsInField(const ChipsField& field, const ChipPos& po
 
 const ChipPos& match3::SwipeDirectionConvertToOffset(SwipeDirection dir)
 {
-	// without "if-else", because branch-prediction
-	// interface of "enum class" gives us a some protection for "out from range"
-	return StaticCache[static_cast<uint8_t>(dir)];
+	std::array<ChipPos, 5> cache = { ChipPos(0, 0), ChipPos(0, 1), ChipPos(-1, 0), ChipPos(1, 0), ChipPos(0, -1) };
+	return cache[static_cast<uint8_t>(dir)];
 
 }
 
@@ -37,8 +35,8 @@ bool match3::HasFieldSwipes(const ChipsField& field)
 			ChipPos pos(i, j);
 			for (auto dir: dirsForChecking)
 			{
-				if (WillChipHaveMatchAfterSwipe(field, pos, dir) ||
-					WillChipHaveMatchAfterSwipe(field, pos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
+				if (IsChipMatchedBySwipe(field, pos, dir) ||
+					IsChipMatchedBySwipe(field, pos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
 				{
 					hasSwipes = true;
 					break;
@@ -132,7 +130,7 @@ int match3::CountChipsAtMatchOnLine(const std::vector<Chip>& verticalLine, int p
 	return howMuchChipsInMatch;
 }
 
-bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction)
+bool match3::IsChipMatchedBySwipe(const ChipsField& field, const ChipPos& pos, SwipeDirection direction)
 {
 	if (!DoesChipPosExistsInField(field, pos) || !field[pos.x][pos.y].IsMatchable())
 	{
@@ -166,7 +164,7 @@ bool match3::WillChipHaveMatchAfterSwipe(const ChipsField& field, const ChipPos&
 	return willHave;
 }
 
-bool match3::DoesChipPosNextToAnother(const ChipPos& first, const ChipPos& second)
+bool match3::AreChipsNearby(const ChipPos& first, const ChipPos& second)
 {
 	return ((first.x == second.x - 1 || first.x == second.x + 1) && first.y == second.y)
 		|| ((first.y == second.y - 1 || first.y == second.y + 1) && first.x == second.x);

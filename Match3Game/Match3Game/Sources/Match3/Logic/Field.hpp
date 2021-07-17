@@ -35,8 +35,8 @@ namespace match3
 
 		const ChipsField& GetChipsField() const { return _chipsField; }
 		bool TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir);
-		void MatchChips();
-		void RemoveDestroyedAndGen(std::vector<ChipPos> &wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips);
+		void MatchAndMarkChips();
+		void RemoveMarkedChipsdAndGen(std::vector<ChipPos> &wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips);
 	private:
 		void MatchLine(std::vector<Chip*>& line);
 	private:

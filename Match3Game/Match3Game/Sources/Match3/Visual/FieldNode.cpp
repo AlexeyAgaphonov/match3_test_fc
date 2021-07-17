@@ -127,8 +127,8 @@ void FieldNode::UpdateFieldChecker(float dt)
 			{
 				std::vector<ChipPos> wereDestroyed;
 				std::vector<std::pair<ChipPos, Chip>> newChips;
-				_field->MatchChips();
-				_field->RemoveDestroyedAndGen(wereDestroyed, newChips);
+				_field->MatchAndMarkChips();
+				_field->RemoveMarkedChipsdAndGen(wereDestroyed, newChips);
 				RemoveChipsFromField(wereDestroyed);
 
 				std::vector<int> howManyChipsNeeds;
@@ -189,7 +189,7 @@ bool FieldNode::InnerMouseDown(const sf::Vector2f& pos)
 	}
 	else
 	{
-		if (DoesChipPosNextToAnother(_selectedChip, tempChipPos))
+		if (AreChipsNearby(_selectedChip, tempChipPos))
 		{
 			StartSwiping(_selectedChip, CalcDirectionFromChipPoses(_selectedChip, tempChipPos));
 			_chipNodes[_selectedChip.x][_selectedChip.y]->AcceptMessage("Unselect", "");

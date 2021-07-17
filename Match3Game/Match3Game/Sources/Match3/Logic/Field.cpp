@@ -48,8 +48,8 @@ void Field::Init(int width, int height)
 bool Field::TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir)
 {
 	bool successfulSwipe = false;
-	if (WillChipHaveMatchAfterSwipe(_chipsField, chipPos, dir) ||
-		WillChipHaveMatchAfterSwipe(_chipsField, chipPos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
+	if (IsChipMatchedBySwipe(_chipsField, chipPos, dir) ||
+		IsChipMatchedBySwipe(_chipsField, chipPos + SwipeDirectionConvertToOffset(dir), OppositeOfSwipeDirection(dir)))
 	{
 		auto chipPos2 = chipPos + SwipeDirectionConvertToOffset(dir);
 		std::swap(_chipsField[chipPos.x][chipPos.y], _chipsField[chipPos2.x][chipPos2.y]);
@@ -58,7 +58,7 @@ bool Field::TryToSwipeChip(const ChipPos& chipPos, SwipeDirection dir)
 	return successfulSwipe;
 }
 
-void Field::MatchChips()
+void Field::MatchAndMarkChips()
 {
 	for (auto& column: _chipsField)
 	{
@@ -88,7 +88,7 @@ void Field::MatchLine(std::vector<Chip*>& line)
 		{
 			for (int i = 0; i < chipAmount; ++i)
 			{
-				line[i + posY - chipAmount]->Destroy();
+				line[i + posY - chipAmount]->MarkForDestroy();
 			}
 		}
 	};
@@ -113,7 +113,7 @@ void Field::MatchLine(std::vector<Chip*>& line)
 
 
 
-void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips)
+void Field::RemoveMarkedChipsdAndGen(std::vector<ChipPos>& wereDestroyed, std::vector<std::pair<ChipPos, Chip>>& newChips)
 {
 	wereDestroyed.clear();
 	newChips.clear();
@@ -126,7 +126,7 @@ void Field::RemoveDestroyedAndGen(std::vector<ChipPos>& wereDestroyed, std::vect
 
 		auto it_erase = std::remove_if(column.begin(), column.end(), [&wereDestroyed, &y, x](auto& chip)->bool {
 				bool ret = false;
-				if (chip.IsDestroyed())
+				if (chip.IsGonnaBeDestroyed())
 				{
 					wereDestroyed.push_back(ChipPos(x, y));
 					ret = true;

@@ -29,10 +29,10 @@ namespace match3
 		const ChipType& GetType() const { return _type; }
 		bool IsMovable() const { return _properties & CF_Movable; }
 		bool IsMatchable() const { return _properties & CF_Movable; }
-		bool IsDestroyed() const { return _isDestroyed; }
-		void Destroy() { _isDestroyed = true; }
+		bool IsGonnaBeDestroyed() const { return _isMarkedForDestroy; }
+		void MarkForDestroy() { _isMarkedForDestroy = true; }
 	private:
-		bool _isDestroyed = false;
+		bool _isMarkedForDestroy = false;
 		ChipType _type;
 		ChipProperties _properties;
 	};
