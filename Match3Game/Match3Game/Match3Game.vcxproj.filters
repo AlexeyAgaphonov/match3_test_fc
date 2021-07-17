@@ -66,6 +66,9 @@
     <ClCompile Include="Sources\Core\RefCounter.cpp">
       <Filter>Source Files\Sources\Core</Filter>
     </ClCompile>
+    <ClCompile Include="Sources\Match3\Match3Application.cpp">
+      <Filter>Source Files\Sources\Match3</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sources\Core\Application.hpp">
@@ -97,6 +100,9 @@
     </ClInclude>
     <ClInclude Include="Sources\Core\RefCounter.hpp">
       <Filter>Source Files\Sources\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Sources\Match3\Match3Application.hpp">
+      <Filter>Source Files\Sources\Match3</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
